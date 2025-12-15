@@ -1,0 +1,5 @@
+google-api-python-client==2.147.0
+google-auth==2.35.0
+google-analytics-data==0.18.12
+pandas==2.2.3
+python-dateutil==2.9.0.post0
