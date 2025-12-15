@@ -2,7 +2,8 @@ name: weekly-seo-report
 
 on:
   schedule:
-    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
+    # Sun 21:10 UTC = Mon 06:10 JST
+    - cron: "10 21 * * 0"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +21,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install deps
         run: pip install -r requirements.txt
 
       - name: Compute date ranges (JST, last week Mon-Sun)
@@ -29,77 +30,29 @@ jobs:
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           import os
-
           tz = ZoneInfo("Asia/Tokyo")
           today = datetime.now(tz).date()
           this_monday = today - timedelta(days=today.weekday())
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
-
           with open(os.environ["GITHUB_ENV"], "a") as f:
             f.write(f"START_DATE={start.isoformat()}\n")
             f.write(f"END_DATE={end.isoformat()}\n")
           PY
 
-      - name: Debug - list files
-        run: |
-          pwd
-          ls -la
-          echo "---- src ----"
-          ls -la src || true
-          echo "---- src/src ----"
-          ls -la src/src || true
-
-      - name: Detect script paths
-        shell: bash
-        run: |
-          set -e
-
-          find_first () {
-            for p in "$@"; do
-              if [ -f "$p" ]; then
-                echo "$p"
-                return 0
-              fi
-            done
-            return 1
-          }
-
-          GSC_PATH=$(find_first "src/fetch_gsc.py" "src/src/fetch_gsc.py") || (echo "fetch_gsc.py not found"; exit 1)
-          GA4_PATH=$(find_first "src/fetch_ga4.py" "src/src/fetch_ga4.py") || (echo "fetch_ga4.py not found"; exit 1)
-          REPORT_PATH=$(find_first "src/build_report.py" "src/src/build_report.py") || (echo "build_report.py not found"; exit 1)
-
-          echo "GSC_PATH=$GSC_PATH" >> "$GITHUB_ENV"
-          echo "GA4_PATH=$GA4_PATH" >> "$GITHUB_ENV"
-          echo "REPORT_PATH=$REPORT_PATH" >> "$GITHUB_ENV"
-
-          echo "Using:"
-          echo "  GSC_PATH=$GSC_PATH"
-          echo "  GA4_PATH=$GA4_PATH"
-          echo "  REPORT_PATH=$REPORT_PATH"
-
-      - name: Fetch GSC & GA4 data
+      - name: Run weekly report
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
-        run: |
-          python "$GSC_PATH"
-          python "$GA4_PATH"
-
-      - name: Build report
-        env:
-          START_DATE: ${{ env.START_DATE }}
-          END_DATE: ${{ env.END_DATE }}
-        run: |
-          python "$REPORT_PATH"
+        run: python src/run_weekly.py
 
       - name: Commit report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add reports/ || true
           git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
           git push
