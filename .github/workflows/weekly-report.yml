@@ -30,17 +30,24 @@ jobs:
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           import os
-
           tz = ZoneInfo("Asia/Tokyo")
           today = datetime.now(tz).date()
           this_monday = today - timedelta(days=today.weekday())
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
-
           with open(os.environ["GITHUB_ENV"], "a") as f:
             f.write(f"START_DATE={start.isoformat()}\n")
             f.write(f"END_DATE={end.isoformat()}\n")
           PY
+
+      - name: Debug - list files
+        run: |
+          echo "=== repo root ==="
+          ls -la
+          echo "=== ./src ==="
+          ls -la src || true
+          echo "=== ./src/src ==="
+          ls -la src/src || true
 
       - name: Fetch GSC & GA4 data
         env:
@@ -50,15 +57,15 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/src/fetch_gsc.py
-          python src/src/fetch_ga4.py
+          python src/fetch_gsc.py
+          python src/fetch_ga4.py
 
       - name: Build report
         env:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/src/build_report.py
+          python src/build_report.py
 
       - name: Commit report
         run: |
