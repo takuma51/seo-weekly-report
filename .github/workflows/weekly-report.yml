@@ -2,7 +2,6 @@ name: weekly-seo-report
 
 on:
   schedule:
-    # Sun 21:10 UTC = Mon 06:10 JST
     - cron: "10 21 * * 0"
   workflow_dispatch:
 
@@ -23,8 +22,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Compute date ranges (JST, last week Mon-Sun)
         run: |
@@ -35,7 +33,6 @@ jobs:
 
           tz = ZoneInfo("Asia/Tokyo")
           today = datetime.now(tz).date()
-
           this_monday = today - timedelta(days=today.weekday())
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
@@ -53,8 +50,8 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/fetch_gsc.py
-          python src/fetch_ga4.py
+          python src/src/fetch_gsc.py
+          python src/src/fetch_ga4.py
 
       - name: Build report
         env:
