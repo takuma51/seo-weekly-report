@@ -2,7 +2,8 @@ name: weekly-seo-report
 
 on:
   schedule:
-    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
+    # Sun 21:10 UTC = Mon 06:10 JST
+    - cron: "10 21 * * 0"
   workflow_dispatch:
 
 permissions:
@@ -11,16 +12,19 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install deps
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Compute date ranges (JST, last week Mon-Sun)
         run: |
@@ -31,6 +35,7 @@ jobs:
 
           tz = ZoneInfo("Asia/Tokyo")
           today = datetime.now(tz).date()
+
           this_monday = today - timedelta(days=today.weekday())
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
@@ -40,7 +45,7 @@ jobs:
             f.write(f"END_DATE={end.isoformat()}\n")
           PY
 
-      - name: Fetch data
+      - name: Fetch GSC & GA4 data
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
@@ -55,9 +60,13 @@ jobs:
         env:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
-        run: python src/build_report.py
+        run: |
+          python src/build_report.py
 
       - name: Commit report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
+          git push
