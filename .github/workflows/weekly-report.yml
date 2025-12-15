@@ -61,7 +61,7 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/build_report.py
+          python src/src/build_report.py
 
       - name: Commit report
         run: |
