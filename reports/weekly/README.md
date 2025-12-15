@@ -1,7 +1,7 @@
 # Weekly SEO Report
 
 - Range: **2025-12-08 → 2025-12-14**
-- Generated: 2025-12-15 10:36 UTC
+- Generated: 2025-12-15 11:36 UTC
 
 ## GSC: Top queries (by clicks)
 | query          |   clicks |   impressions |       ctr |   position |
