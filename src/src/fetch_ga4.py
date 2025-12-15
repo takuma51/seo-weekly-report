@@ -1,40 +1,71 @@
-import os, json
-import pandas as pd
-from google.oauth2 import service_account
-from google.analytics.data_v1beta import BetaAnalyticsDataClient
-from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
+name: weekly-seo-report
 
-SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
+on:
+  schedule:
+    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
+  workflow_dispatch:
 
-def fetch_ga4(property_id: str, start_date: str, end_date: str) -> pd.DataFrame:
-    creds = service_account.Credentials.from_service_account_info(
-        json.loads(os.environ["GOOGLE_SA_JSON"]),
-        scopes=SCOPES,
-    )
-    client = BetaAnalyticsDataClient(credentials=creds)
+permissions:
+  contents: write
 
-    request = RunReportRequest(
-        property=f"properties/{property_id}",
-        date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
-        dimensions=[Dimension(name="sessionDefaultChannelGroup")],
-        metrics=[Metric(name="sessions"), Metric(name="totalUsers")],
-    )
-    resp = client.run_report(request)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    rows = []
-    for r in resp.rows:
-        rows.append({
-            "channel_group": r.dimension_values[0].value,
-            "sessions": int(r.metric_values[0].value),
-            "total_users": int(r.metric_values[1].value),
-        })
-    return pd.DataFrame(rows)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-if __name__ == "__main__":
-    prop = os.environ["GA4_PROPERTY_ID"]
-    start = os.environ["START_DATE"]
-    end = os.environ["END_DATE"]
-    df = fetch_ga4(prop, start, end)
-    out = os.environ.get("GA4_OUT", "reports/weekly/data/ga4.csv")
-    os.makedirs(os.path.dirname(out), exist_ok=True)
-    df.to_csv(out, index=False)
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Compute date ranges (JST, last week Mon-Sun)
+        run: |
+          python - << 'PY'
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          import os
+
+          tz = ZoneInfo("Asia/Tokyo")
+          today = datetime.now(tz).date()
+          this_monday = today - timedelta(days=today.weekday())
+          start = this_monday - timedelta(days=7)
+          end = this_monday - timedelta(days=1)
+
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+            f.write(f"START_DATE={start.isoformat()}\n")
+            f.write(f"END_DATE={end.isoformat()}\n")
+          PY
+
+      - name: Fetch GSC & GA4 data
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+        run: |
+          echo "START_DATE=$START_DATE"
+          echo "END_DATE=$END_DATE"
+          echo "GSC_SITE_URL=$GSC_SITE_URL"
+          python src/src/fetch_gsc.py
+          python src/src/fetch_ga4.py
+
+      - name: Build report
+        env:
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+        run: python src/src/build_report.py
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Update weekly SEO report ($START_DATE to $END_DATE)"
+
+      - name: Push
+        run: git push
