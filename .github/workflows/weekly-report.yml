@@ -2,7 +2,7 @@ name: weekly-seo-report
 
 on:
   schedule:
-    - cron: "10 21 * * 0"
+    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,11 +29,13 @@ jobs:
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           import os
+
           tz = ZoneInfo("Asia/Tokyo")
           today = datetime.now(tz).date()
           this_monday = today - timedelta(days=today.weekday())
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
+
           with open(os.environ["GITHUB_ENV"], "a") as f:
             f.write(f"START_DATE={start.isoformat()}\n")
             f.write(f"END_DATE={end.isoformat()}\n")
@@ -42,12 +43,30 @@ jobs:
 
       - name: Debug - list files
         run: |
-          echo "=== repo root ==="
+          pwd
           ls -la
-          echo "=== ./src ==="
+          echo "---- src ----"
           ls -la src || true
-          echo "=== ./src/src ==="
+          echo "---- src/src ----"
           ls -la src/src || true
+
+      - name: Detect script directory
+        run: |
+          if [ -f "src/fetch_ga4.py" ]; then
+            echo "SCRIPT_DIR=src" >> $GITHUB_ENV
+          elif [ -f "src/src/fetch_ga4.py" ]; then
+            echo "SCRIPT_DIR=src/src" >> $GITHUB_ENV
+          else
+            echo "fetch_ga4.py not found in src/ or src/src/"
+            exit 1
+          fi
+
+          if [ -f "${SCRIPT_DIR}/fetch_gsc.py" ]; then
+            echo "OK: fetch_gsc.py found"
+          else
+            echo "fetch_gsc.py not found in ${SCRIPT_DIR}/"
+            exit 1
+          fi
 
       - name: Fetch GSC & GA4 data
         env:
@@ -57,15 +76,22 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/fetch_gsc.py
-          python src/fetch_ga4.py
+          python "${SCRIPT_DIR}/fetch_gsc.py"
+          python "${SCRIPT_DIR}/fetch_ga4.py"
 
       - name: Build report
         env:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python src/build_report.py
+          if [ -f "src/build_report.py" ]; then
+            python src/build_report.py
+          elif [ -f "src/src/build_report.py" ]; then
+            python src/src/build_report.py
+          else
+            echo "build_report.py not found in src/ or src/src/"
+            exit 1
+          fi
 
       - name: Commit report
         run: |
