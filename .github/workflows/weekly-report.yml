@@ -50,23 +50,33 @@ jobs:
           echo "---- src/src ----"
           ls -la src/src || true
 
-      - name: Detect script directory
+      - name: Detect script paths
+        shell: bash
         run: |
-          if [ -f "src/fetch_ga4.py" ]; then
-            echo "SCRIPT_DIR=src" >> $GITHUB_ENV
-          elif [ -f "src/src/fetch_ga4.py" ]; then
-            echo "SCRIPT_DIR=src/src" >> $GITHUB_ENV
-          else
-            echo "fetch_ga4.py not found in src/ or src/src/"
-            exit 1
-          fi
+          set -e
 
-          if [ -f "${SCRIPT_DIR}/fetch_gsc.py" ]; then
-            echo "OK: fetch_gsc.py found"
-          else
-            echo "fetch_gsc.py not found in ${SCRIPT_DIR}/"
-            exit 1
-          fi
+          find_first () {
+            for p in "$@"; do
+              if [ -f "$p" ]; then
+                echo "$p"
+                return 0
+              fi
+            done
+            return 1
+          }
+
+          GSC_PATH=$(find_first "src/fetch_gsc.py" "src/src/fetch_gsc.py") || (echo "fetch_gsc.py not found"; exit 1)
+          GA4_PATH=$(find_first "src/fetch_ga4.py" "src/src/fetch_ga4.py") || (echo "fetch_ga4.py not found"; exit 1)
+          REPORT_PATH=$(find_first "src/build_report.py" "src/src/build_report.py") || (echo "build_report.py not found"; exit 1)
+
+          echo "GSC_PATH=$GSC_PATH" >> "$GITHUB_ENV"
+          echo "GA4_PATH=$GA4_PATH" >> "$GITHUB_ENV"
+          echo "REPORT_PATH=$REPORT_PATH" >> "$GITHUB_ENV"
+
+          echo "Using:"
+          echo "  GSC_PATH=$GSC_PATH"
+          echo "  GA4_PATH=$GA4_PATH"
+          echo "  REPORT_PATH=$REPORT_PATH"
 
       - name: Fetch GSC & GA4 data
         env:
@@ -76,22 +86,15 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          python "${SCRIPT_DIR}/fetch_gsc.py"
-          python "${SCRIPT_DIR}/fetch_ga4.py"
+          python "$GSC_PATH"
+          python "$GA4_PATH"
 
       - name: Build report
         env:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
         run: |
-          if [ -f "src/build_report.py" ]; then
-            python src/build_report.py
-          elif [ -f "src/src/build_report.py" ]; then
-            python src/src/build_report.py
-          else
-            echo "build_report.py not found in src/ or src/src/"
-            exit 1
-          fi
+          python "$REPORT_PATH"
 
       - name: Commit report
         run: |
