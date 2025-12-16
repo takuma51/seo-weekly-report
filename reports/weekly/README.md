@@ -1,7 +1,7 @@
 # Weekly SEO Report
 
 - Range: **2025-12-08 → 2025-12-14**
-- Generated: 2025-12-16 08:12 UTC
+- Generated: 2025-12-16 08:28 UTC
 
 ## GSC: Overview
 - (ここに合計クリック等を後で追加予定)
