@@ -1,7 +1,10 @@
 # Weekly SEO Report
 
 - Range: **2025-12-08 → 2025-12-14**
-- Generated: 2025-12-15 11:36 UTC
+- Generated: 2025-12-16 08:12 UTC
+
+## GSC: Overview
+- (ここに合計クリック等を後で追加予定)
 
 ## GSC: Top queries (by clicks)
 | query          |   clicks |   impressions |       ctr |   position |
@@ -35,3 +38,6 @@
 | Referral        |         16 |            10 |
 | Unassigned      |         10 |             8 |
 | Organic Social  |          5 |             4 |
+
+## Visuals
+![Top Queries](images/top_queries.png)
