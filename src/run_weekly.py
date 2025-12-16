@@ -8,6 +8,9 @@ from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, Run
 
 from googleapiclient.discovery import build
 
+# ★ 追加（plots.py から読み込む）
+from plots import plot_top_queries
+
 
 SCOPES = [
     "https://www.googleapis.com/auth/webmasters.readonly",
@@ -83,11 +86,18 @@ def main():
     ga4_df = fetch_ga4(creds, prop, start, end)
 
     out_dir = "reports/weekly"
+    images_dir = f"{out_dir}/images"  # ★ 追加
     os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(images_dir, exist_ok=True)  # ★ 追加
 
     # 生データも保存（あとで加工しやすい）
     gsc_df.to_csv(f"{out_dir}/gsc_top_queries.csv", index=False)
     ga4_df.to_csv(f"{out_dir}/ga4_channels.csv", index=False)
+
+    # ★ 追加：画像出力（Top Queries）
+    top_queries_img_rel = "images/top_queries.png"
+    top_queries_img_path = f"{out_dir}/{top_queries_img_rel}"
+    plot_top_queries(gsc_df, top_queries_img_path)
 
     # レポート（Markdown）
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
@@ -101,11 +111,15 @@ def main():
 
 ## GA4: Sessions by channel group
 {to_md_table(ga4_df, 20)}
+
+## Visuals
+![Top Queries]({top_queries_img_rel})
 """
     with open(f"{out_dir}/README.md", "w", encoding="utf-8") as f:
         f.write(md)
 
     print("✅ Report generated:", f"{out_dir}/README.md")
+    print("✅ Image generated:", top_queries_img_path)
 
 
 if __name__ == "__main__":
