@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
-from pathlib import Path
 
-def plot_top_queries(df, out_path):
-    if df.empty:
-        return
-
-    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+def plot_top_queries(df, out_path: str):
+    if df is None or df.empty:
+        return None
 
     top = df.head(10)
     plt.figure(figsize=(10, 5))
@@ -15,3 +12,4 @@ def plot_top_queries(df, out_path):
     plt.tight_layout()
     plt.savefig(out_path)
     plt.close()
+    return out_path
