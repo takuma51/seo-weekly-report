@@ -1,178 +1,61 @@
-import os
-import json
-from datetime import datetime
-import pandas as pd
-import matplotlib.pyplot as plt
+name: weekly-seo-report
 
-from google.oauth2 import service_account
-from google.analytics.data_v1beta import BetaAnalyticsDataClient
-from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
-from googleapiclient.discovery import build
+on:
+  schedule:
+    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
+  workflow_dispatch:
 
+permissions:
+  contents: write
 
-# =========================
-# Credentials
-# =========================
-SCOPES = [
-    "https://www.googleapis.com/auth/webmasters.readonly",
-    "https://www.googleapis.com/auth/analytics.readonly",
-]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-def get_creds():
-    sa = json.loads(os.environ["GOOGLE_SA_JSON"])
-    return service_account.Credentials.from_service_account_info(sa, scopes=SCOPES)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip show tabulate || true
+          python -m pip list | grep -i tabulate || true
 
-# =========================
-# Fetch GA4
-# =========================
-def fetch_ga4(creds, property_id, start_date, end_date):
-    client = BetaAnalyticsDataClient(credentials=creds)
-    request = RunReportRequest(
-        property=f"properties/{property_id}",
-        date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
-        dimensions=[Dimension(name="sessionDefaultChannelGroup")],
-        metrics=[
-            Metric(name="sessions"),
-            Metric(name="totalUsers"),
-        ],
-    )
-    response = client.run_report(request)
+      - name: Compute date ranges (JST, last week Mon-Sun)
+        run: |
+          python - << 'PY'
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          import os
+          tz = ZoneInfo("Asia/Tokyo")
+          today = datetime.now(tz).date()
+          this_monday = today - timedelta(days=today.weekday())
+          start = this_monday - timedelta(days=7)
+          end = this_monday - timedelta(days=1)
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+            f.write(f"START_DATE={start.isoformat()}\n")
+            f.write(f"END_DATE={end.isoformat()}\n")
+          PY
 
-    rows = []
-    for r in response.rows:
-        rows.append({
-            "channel": r.dimension_values[0].value,
-            "sessions": int(r.metric_values[0].value),
-            "users": int(r.metric_values[1].value),
-        })
+      - name: Run weekly report
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+        run: python src/run_weekly.py
 
-    return pd.DataFrame(rows).sort_values("sessions", ascending=False)
-
-
-# =========================
-# Fetch GSC
-# =========================
-def fetch_gsc(creds, site_url, start_date, end_date):
-    service = build("searchconsole", "v1", credentials=creds)
-    body = {
-        "startDate": start_date,
-        "endDate": end_date,
-        "dimensions": ["query"],
-        "rowLimit": 50,
-    }
-    response = service.searchanalytics().query(
-        siteUrl=site_url,
-        body=body
-    ).execute()
-
-    rows = []
-    for r in response.get("rows", []):
-        rows.append({
-            "query": r["keys"][0],
-            "clicks": r.get("clicks", 0),
-            "impressions": r.get("impressions", 0),
-            "ctr": round(r.get("ctr", 0) * 100, 2),
-            "position": round(r.get("position", 0), 2),
-        })
-
-    return pd.DataFrame(rows).sort_values("clicks", ascending=False)
-
-
-# =========================
-# Plot
-# =========================
-def plot_top_queries(df, out_path):
-    if df is None or df.empty:
-        return
-
-    top = df.head(10)
-    plt.figure(figsize=(10, 5))
-    plt.barh(top["query"], top["clicks"])
-    plt.gca().invert_yaxis()
-    plt.title("Top Queries by Clicks")
-    plt.tight_layout()
-    plt.savefig(out_path)
-    plt.close()
-
-
-# =========================
-# Markdown helpers
-# =========================
-def to_md_table(df, rows=10):
-    if df is None or df.empty:
-        return "_No data_"
-    return df.head(rows).to_markdown(index=False)
-
-
-# =========================
-# Main
-# =========================
-def main():
-    start = os.environ["START_DATE"]
-    end = os.environ["END_DATE"]
-    site_url = os.environ["GSC_SITE_URL"]
-    property_id = os.environ["GA4_PROPERTY_ID"]
-
-    creds = get_creds()
-
-    gsc_df = fetch_gsc(creds, site_url, start, end)
-    ga4_df = fetch_ga4(creds, property_id, start, end)
-
-    out_dir = "reports/weekly"
-    img_dir = f"{out_dir}/images"
-    os.makedirs(img_dir, exist_ok=True)
-
-    # Plot
-    plot_top_queries(gsc_df, f"{img_dir}/top_queries.png")
-
-    # Save raw data
-    gsc_df.to_csv(f"{out_dir}/gsc_top_queries.csv", index=False)
-    ga4_df.to_csv(f"{out_dir}/ga4_channels.csv", index=False)
-
-    # Report
-    md = f"""# Weekly SEO Report
-
-## Executive Summary
-- Period: **{start} → {end}**
-- GSC Top Query Clicks: **{int(gsc_df['clicks'].sum()) if not gsc_df.empty else 0}**
-- GA4 Total Sessions: **{int(ga4_df['sessions'].sum()) if not ga4_df.empty else 0}**
-
----
-
-## Google Search Console
-
-### Top Queries
-{to_md_table(gsc_df, 15)}
-
----
-
-## Google Analytics (GA4)
-
-### Sessions by Channel
-{to_md_table(ga4_df, 10)}
-
----
-
-## Visuals
-![Top Queries](./images/top_queries.png)
-
----
-
-## Notes / Next Actions
-- Monitor high-click queries for ranking improvements
-- Check pages related to top queries
-"""
-
-    filename = f"weekly_{start}_to_{end}.md"
-    with open(f"{out_dir}/{filename}", "w", encoding="utf-8") as f:
-        f.write(md)
-
-    with open(f"{out_dir}/latest.md", "w", encoding="utf-8") as f:
-        f.write(md)
-
-    print("✅ Weekly report generated")
-
-
-if __name__ == "__main__":
-    main()
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/ || true
+          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
+          git push
