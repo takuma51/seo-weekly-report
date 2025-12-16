@@ -16,7 +16,7 @@
 - Sessions / Users by Channel
 
 ## Visuals
-![Top Queries](images/top_queries.png)
+![Top Queries](reports/weekly/images/top_queries.png)
 
 ## Notes / Next Actions
 - 来週やること
