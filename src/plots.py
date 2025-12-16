@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 
+# 日本語フォント（Actions 側で fonts-noto-cjk が入っている前提）
+plt.rcParams["font.family"] = "Noto Sans CJK JP"
+
 def plot_top_queries(df, out_path: str):
     if df is None or df.empty:
         return None
