@@ -158,17 +158,14 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
         if c in int_like:
             view[c] = view[c].apply(fmt_int)
 
-    # positionは小数
     for c in ["position", "position_prev", "position_delta"]:
         if c in view.columns:
             view[c] = view[c].apply(lambda v: fmt_float(v, 2))
 
-    # ctr/ctr_prevは0-1 -> %
     for c in ["ctr", "ctr_prev"]:
         if c in view.columns:
             view[c] = view[c].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}%")
 
-    # ctr_deltaは0-1差分 -> pt
     if "ctr_delta" in view.columns:
         view["ctr_delta"] = view["ctr_delta"].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}pt")
 
@@ -186,7 +183,6 @@ def build_exec_summary(
     lines: list[str] = []
     actions: list[str] = []
 
-    # ---- GSC totals ----
     cur_clicks = float(gsc_cur["clicks"].sum()) if gsc_cur is not None and not gsc_cur.empty else 0.0
     prev_clicks = float(gsc_prev["clicks"].sum()) if gsc_prev is not None and not gsc_prev.empty else 0.0
 
@@ -196,7 +192,6 @@ def build_exec_summary(
     cur_ctr = safe_div(cur_clicks, cur_impr)
     prev_ctr = safe_div(prev_clicks, prev_impr)
 
-    # impression加重 position
     def weighted_pos(df: pd.DataFrame) -> float:
         if df is None or df.empty:
             return np.nan
@@ -233,7 +228,6 @@ def build_exec_summary(
         else:
             lines.append(f"Avg position is {cur_pos:.2f}.")
 
-    # ---- Top gain / loss query ----
     if gsc_wow is not None and not gsc_wow.empty and "clicks_delta" in gsc_wow.columns:
         tmp = gsc_wow.copy()
         tmp["clicks_delta"] = tmp["clicks_delta"].fillna(0)
@@ -251,26 +245,21 @@ def build_exec_summary(
             d = int(round(float(loss.iloc[0]["clicks_delta"])))
             lines.append(f'Top losing query: "{q}" ({d} clicks).')
 
-        # ---- Actions heuristics ----
-        # Position worse (higher is worse)
         if not pd.isna(cur_pos) and not pd.isna(prev_pos) and (cur_pos - prev_pos) > 0.30:
             actions.append("Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.")
 
-        # CTR drop: -0.5pt threshold
         if not pd.isna(cur_ctr) and not pd.isna(prev_ctr) and (cur_ctr - prev_ctr) < -0.005:
             actions.append("CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.")
 
-        # Big query drops
         big_drops = tmp[tmp["clicks_delta"] <= -3].head(5)
         if len(big_drops) > 0:
             actions.append("Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.")
 
-        # New queries
-        new_winners = tmp[(tmp.get("clicks_prev", pd.Series([0]*len(tmp))).fillna(0) == 0) & (tmp["clicks"] > 0)].head(5)
+        clicks_prev_series = tmp["clicks_prev"] if "clicks_prev" in tmp.columns else pd.Series([0]*len(tmp))
+        new_winners = tmp[(clicks_prev_series.fillna(0) == 0) & (tmp["clicks"] > 0)].head(5)
         if len(new_winners) > 0:
             actions.append("New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.")
 
-    # ---- GA4 totals ----
     cur_sessions = float(ga4_cur["sessions"].sum()) if ga4_cur is not None and not ga4_cur.empty else 0.0
     prev_sessions = float(ga4_prev["sessions"].sum()) if ga4_prev is not None and not ga4_prev.empty else 0.0
 
@@ -297,7 +286,6 @@ def build_exec_summary(
                 elif pct >= 0.10:
                     actions.append("Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).")
 
-    # ---- fallback ----
     if not actions:
         actions = [
             "Review top gaining/declining queries and map them to landing pages for quick wins.",
@@ -323,15 +311,12 @@ def main():
 
     creds = get_creds()
 
-    # Current week
     gsc_df = fetch_gsc(creds, site_url, start, end)
     ga4_df = fetch_ga4(creds, prop, start, end)
 
-    # Previous week
     gsc_prev_df = fetch_gsc(creds, site_url, prev_start, prev_end)
     ga4_prev_df = fetch_ga4(creds, prop, prev_start, prev_end)
 
-    # WoW tables
     gsc_wow = add_wow(gsc_df, gsc_prev_df, key="query", metrics=["clicks", "impressions", "ctr", "position"])
     ga4_wow = add_wow(ga4_df, ga4_prev_df, key="channel_group", metrics=["sessions", "total_users"])
 
@@ -344,7 +329,6 @@ def main():
     img_dir = f"{out_dir}/images"
     os.makedirs(img_dir, exist_ok=True)
 
-    # Save CSVs (optional raw tables)
     if gsc_df is not None and not gsc_df.empty:
         gsc_df.to_csv(f"{out_dir}/gsc_top_queries.csv", index=False)
     if ga4_df is not None and not ga4_df.empty:
@@ -355,7 +339,6 @@ def main():
     if ga4_wow is not None and not ga4_wow.empty:
         ga4_wow.to_csv(f"{out_dir}/ga4_channels_wow.csv", index=False)
 
-    # Plot
     if gsc_df is not None and not gsc_df.empty:
         plot_top_queries(gsc_df, f"{img_dir}/top_queries.png")
 
@@ -367,7 +350,13 @@ def main():
     gsc_view = gsc_wow[gsc_cols] if gsc_wow is not None and not gsc_wow.empty else gsc_wow
     ga4_view = ga4_wow[ga4_cols] if ga4_wow is not None and not ga4_wow.empty else ga4_wow
 
-    md = f"""# Weekly SEO Report
+    # ✅ Pagesで確実にMarkdown→HTML化させるため front matter を入れる
+    md = f"""---
+layout: default
+title: Weekly SEO Report
+---
+
+# Weekly SEO Report
 
 ## Executive Summary
 
@@ -390,10 +379,11 @@ def main():
 {chr(10).join([f"- {a}" for a in next_actions])}
 """
 
-    with open(f"{out_dir}/README.md", "w", encoding="utf-8") as f:
+    # ✅ README.md ではなく index.md に出力する
+    with open(f"{out_dir}/index.md", "w", encoding="utf-8") as f:
         f.write(md)
 
-    print("✅ Weekly report generated:", f"{out_dir}/README.md")
+    print("✅ Weekly report generated:", f"{out_dir}/index.md")
 
 
 if __name__ == "__main__":
