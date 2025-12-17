@@ -77,27 +77,15 @@ jobs:
           PREV_END_DATE: ${{ env.PREV_END_DATE }}
         run: python src/run_weekly.py
 
-      - name: Commit & push report
+      - name: Commit report
         run: |
-          set -e
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 先に最新へ（直前に誰かがpushしてても事故りにくい）
-          git pull --rebase origin main
-
           git add reports/ || true
 
-          # 変更が無ければ終了
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
+          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
 
-          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})"
-
-          # 念のためもう一回rebase（直前push対策）
-          git pull --rebase origin main
-
+          # 競合回避（直前pushなど）
+          git pull --rebase origin main || true
           git push origin main
