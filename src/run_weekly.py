@@ -33,10 +33,7 @@ def fetch_ga4(creds, property_id: str, start_date: str, end_date: str) -> pd.Dat
         property=f"properties/{property_id}",
         date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
         dimensions=[Dimension(name="sessionDefaultChannelGroup")],
-        metrics=[
-            Metric(name="sessions"),
-            Metric(name="totalUsers"),
-        ],
+        metrics=[Metric(name="sessions"), Metric(name="totalUsers")],
     )
     resp = client.run_report(req)
 
@@ -99,6 +96,46 @@ def add_wow(current: pd.DataFrame, previous: pd.DataFrame, key: str, metrics: li
 
 
 # =========================
+# Executive Summary
+# =========================
+def build_exec_summary(gsc_wow: pd.DataFrame, ga4_wow: pd.DataFrame) -> str:
+    lines = []
+
+    # --- GSC clicks ---
+    cur_clicks = gsc_wow["clicks"].sum()
+    prev_clicks = gsc_wow["clicks_prev"].fillna(0).sum()
+
+    if prev_clicks > 0:
+        pct = (cur_clicks - prev_clicks) / prev_clicks * 100
+        direction = "increased" if pct >= 0 else "decreased"
+        lines.append(
+            f"Overall search clicks {direction} by {abs(pct):.1f}% week over week."
+        )
+    else:
+        lines.append("Overall search clicks could not be compared week over week.")
+
+    # --- Top up / down queries ---
+    if not gsc_wow.empty:
+        up = gsc_wow.sort_values("clicks_delta", ascending=False).iloc[0]
+        down = gsc_wow.sort_values("clicks_delta").iloc[0]
+
+        if up["clicks_delta"] > 0:
+            lines.append(f'The top growing query was "{up["query"]}".')
+        if down["clicks_delta"] < 0:
+            lines.append(f'The largest decline was observed for "{down["query"]}".')
+
+    # --- GA4 channel ---
+    if not ga4_wow.empty:
+        top_channel = ga4_wow.sort_values("sessions_delta", ascending=False).iloc[0]
+        if top_channel["sessions_delta"] > 0:
+            lines.append(
+                f'{top_channel["channel_group"]} was the strongest traffic channel this week.'
+            )
+
+    return " ".join(lines)
+
+
+# =========================
 # Markdown helper
 # =========================
 def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
@@ -107,7 +144,6 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
 
     view = df.head(max_rows).copy()
 
-    # %表示を整形
     for c in view.columns:
         if c.endswith("_pct"):
             view[c] = view[c].apply(lambda x: "—" if pd.isna(x) else f"{x*100:.1f}%")
@@ -129,11 +165,10 @@ def main():
 
     creds = get_creds()
 
-    # 今週
+    # Current / Previous
     gsc_df = fetch_gsc(creds, site_url, start, end)
     ga4_df = fetch_ga4(creds, prop, start, end)
 
-    # 前週
     gsc_prev_df = fetch_gsc(creds, site_url, prev_start, prev_end)
     ga4_prev_df = fetch_ga4(creds, prop, prev_start, prev_end)
 
@@ -154,15 +189,21 @@ def main():
     img_dir = f"{out_dir}/images"
     os.makedirs(img_dir, exist_ok=True)
 
-    # CSV（検算・再利用用）
+    # CSV
     gsc_wow.to_csv(f"{out_dir}/gsc_top_queries_wow.csv", index=False)
     ga4_wow.to_csv(f"{out_dir}/ga4_channels_wow.csv", index=False)
 
-    # グラフ（今週クリック上位）
+    # Visual
     plot_top_queries(gsc_df, f"{img_dir}/top_queries.png")
+
+    # Executive Summary
+    exec_summary = build_exec_summary(gsc_wow, ga4_wow)
 
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
     md = f"""# Weekly SEO Report
+
+## Executive Summary
+{exec_summary}
 
 - Current: **{start} → {end}**
 - Previous: **{prev_start} → {prev_end}**
@@ -192,7 +233,7 @@ def main():
     with open(f"{out_dir}/README.md", "w", encoding="utf-8") as f:
         f.write(md)
 
-    print("✅ Weekly WoW report generated")
+    print("✅ Weekly WoW report with Executive Summary generated")
 
 
 if __name__ == "__main__":
