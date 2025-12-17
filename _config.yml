@@ -1,0 +1,4 @@
+markdown: GFM
+
+kramdown:
+  input: GFM
