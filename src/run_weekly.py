@@ -41,9 +41,10 @@ def fetch_ga4(creds, property_id: str, start_date: str, end_date: str) -> pd.Dat
     for r in resp.rows:
         rows.append({
             "channel_group": r.dimension_values[0].value,
-            "sessions": int(r.metric_values[0].value),
-            "total_users": int(r.metric_values[1].value),
+            "sessions": float(r.metric_values[0].value),
+            "total_users": float(r.metric_values[1].value),
         })
+
     df = pd.DataFrame(rows)
     if df.empty:
         return df
@@ -59,7 +60,7 @@ def fetch_gsc(creds, site_url: str, start_date: str, end_date: str) -> pd.DataFr
         "startDate": start_date,
         "endDate": end_date,
         "dimensions": ["query"],
-        "rowLimit": 250,  # 50だとWoW比較が薄くなるので増やすのがおすすめ
+        "rowLimit": 250,
     }
     res = svc.searchanalytics().query(siteUrl=site_url, body=body).execute()
 
@@ -76,6 +77,7 @@ def fetch_gsc(creds, site_url: str, start_date: str, end_date: str) -> pd.DataFr
     df = pd.DataFrame(rows)
     if df.empty:
         return df
+
     return df.sort_values(["clicks", "impressions"], ascending=False)
 
 
@@ -83,18 +85,18 @@ def fetch_gsc(creds, site_url: str, start_date: str, end_date: str) -> pd.DataFr
 # WoW helper
 # =========================
 def add_wow(current: pd.DataFrame, previous: pd.DataFrame, key: str, metrics: list[str]) -> pd.DataFrame:
+    if current is None or current.empty:
+        return current
+
     cur = current.copy()
-    prev = previous.copy()
-
-    if cur is None or cur.empty:
-        return cur
-
-    if prev is None:
-        prev = pd.DataFrame(columns=[key] + metrics)
+    prev = previous.copy() if previous is not None else pd.DataFrame(columns=[key] + metrics)
 
     prev = prev.rename(columns={m: f"{m}_prev" for m in metrics})
 
     keep_cols = [key] + [f"{m}_prev" for m in metrics if f"{m}_prev" in prev.columns]
+    if not keep_cols:
+        keep_cols = [key]
+
     df = cur.merge(prev[keep_cols], on=key, how="left")
 
     for m in metrics:
@@ -104,7 +106,6 @@ def add_wow(current: pd.DataFrame, previous: pd.DataFrame, key: str, metrics: li
 
         df[f"{m}_delta"] = df[m] - df[prev_col].fillna(0)
 
-        # pct: prev==0 は NaN（"—" 表示）
         denom = df[prev_col].fillna(0)
         df[f"{m}_pct"] = np.where(denom == 0, np.nan, df[f"{m}_delta"] / denom)
 
@@ -123,6 +124,17 @@ def fmt_int(x) -> str:
     except Exception:
         return "0"
 
+def fmt_float(x, digits=2) -> str:
+    try:
+        return f"{float(x):.{digits}f}"
+    except Exception:
+        return "0"
+
+def safe_div(n, d):
+    if d is None or d == 0:
+        return np.nan
+    return n / d
+
 def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
     if df is None or df.empty:
         return "_No data_"
@@ -132,8 +144,30 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
     for c in view.columns:
         if c.endswith("_pct"):
             view[c] = view[c].apply(fmt_pct)
-        if c in ["clicks", "clicks_prev", "clicks_delta", "impressions", "sessions", "sessions_prev", "sessions_delta", "total_users"]:
-            view[c] = view[c].apply(lambda v: fmt_int(v))
+
+    int_like = {
+        "clicks", "clicks_prev", "clicks_delta",
+        "impressions", "impressions_prev", "impressions_delta",
+        "sessions", "sessions_prev", "sessions_delta",
+        "total_users", "total_users_prev", "total_users_delta",
+    }
+    for c in view.columns:
+        if c in int_like:
+            view[c] = view[c].apply(fmt_int)
+
+    # 位置は小数が見たい
+    for c in ["position", "position_prev", "position_delta"]:
+        if c in view.columns:
+            view[c] = view[c].apply(lambda v: fmt_float(v, 2))
+
+    # CTRは%で見たい（ctr/ctr_prevは0-1）
+    for c in ["ctr", "ctr_prev"]:
+        if c in view.columns:
+            view[c] = view[c].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}%")
+    for c in ["ctr_delta"]:
+        if c in view.columns:
+            # 0-1差分を%pt表示
+            view[c] = view[c].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}pt")
 
     return view.to_markdown(index=False)
 
@@ -141,61 +175,113 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
 # =========================
 # Executive summary & actions (rule-based)
 # =========================
-def build_exec_summary(gsc_wow: pd.DataFrame, ga4_wow: pd.DataFrame) -> tuple[str, list[str]]:
-    lines = []
-    actions = []
+def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: pd.DataFrame,
+                       ga4_cur: pd.DataFrame, ga4_prev: pd.DataFrame, ga4_wow: pd.DataFrame) -> tuple[str, list[str]]:
+    lines: list[str] = []
+    actions: list[str] = []
 
-    # --- GSC overall clicks WoW ---
-    total_clicks = float(gsc_wow["clicks"].fillna(0).sum()) if gsc_wow is not None and not gsc_wow.empty else 0.0
-    total_prev = float(gsc_wow["clicks_prev"].fillna(0).sum()) if gsc_wow is not None and not gsc_wow.empty else 0.0
-    if total_prev > 0:
-        wow_pct = (total_clicks - total_prev) / total_prev
-        lines.append(f"Overall search clicks changed by {wow_pct*100:.1f}% week over week.")
+    # ---- GSC totals ----
+    cur_clicks = float(gsc_cur["clicks"].sum()) if gsc_cur is not None and not gsc_cur.empty else 0.0
+    prev_clicks = float(gsc_prev["clicks"].sum()) if gsc_prev is not None and not gsc_prev.empty else 0.0
+
+    cur_impr = float(gsc_cur["impressions"].sum()) if gsc_cur is not None and not gsc_cur.empty else 0.0
+    prev_impr = float(gsc_prev["impressions"].sum()) if gsc_prev is not None and not gsc_prev.empty else 0.0
+
+    cur_ctr = safe_div(cur_clicks, cur_impr)
+    prev_ctr = safe_div(prev_clicks, prev_impr)
+
+    # positionは「impressions加重平均」に寄せる（より実態に近い）
+    def weighted_pos(df: pd.DataFrame) -> float:
+        if df is None or df.empty:
+            return np.nan
+        w = df["impressions"].fillna(0).astype(float)
+        p = df["position"].replace([np.inf, -np.inf], np.nan).astype(float)
+        if w.sum() == 0:
+            return float(p.mean()) if len(p.dropna()) else np.nan
+        return float((p.fillna(0) * w).sum() / w.sum())
+
+    cur_pos = weighted_pos(gsc_cur)
+    prev_pos = weighted_pos(gsc_prev)
+
+    if prev_clicks > 0:
+        wow_clicks_pct = (cur_clicks - prev_clicks) / prev_clicks
+        lines.append(f"Search clicks changed by {wow_clicks_pct*100:.1f}% WoW ({int(cur_clicks):,} vs {int(prev_clicks):,}).")
     else:
-        lines.append("Overall search clicks were generated for this week (no prior-week baseline).")
+        lines.append(f"Search clicks for the current period were {int(cur_clicks):,} (no prior-week baseline).")
 
-    # --- Top gain / loss query by clicks delta ---
+    if prev_impr > 0:
+        wow_impr_pct = (cur_impr - prev_impr) / prev_impr
+        lines.append(f"Impressions changed by {wow_impr_pct*100:.1f}% WoW ({int(cur_impr):,} vs {int(prev_impr):,}).")
+
+    if not pd.isna(cur_ctr):
+        if not pd.isna(prev_ctr) and prev_ctr > 0:
+            ctr_delta_pt = (cur_ctr - prev_ctr) * 100
+            lines.append(f"CTR is {cur_ctr*100:.1f}% ({ctr_delta_pt:+.1f}pt WoW).")
+        else:
+            lines.append(f"CTR is {cur_ctr*100:.1f}%.")
+
+    if not pd.isna(cur_pos):
+        if not pd.isna(prev_pos):
+            pos_delta = cur_pos - prev_pos
+            # positionは小さいほど良いので、+は悪化
+            lines.append(f"Avg position is {cur_pos:.2f} ({pos_delta:+.2f} WoW).")
+        else:
+            lines.append(f"Avg position is {cur_pos:.2f}.")
+
+    # ---- Top gain / loss query ----
     if gsc_wow is not None and not gsc_wow.empty and "clicks_delta" in gsc_wow.columns:
         tmp = gsc_wow.copy()
         tmp["clicks_delta"] = tmp["clicks_delta"].fillna(0)
 
-        top_gain = tmp.sort_values("clicks_delta", ascending=False).head(1)
-        top_loss = tmp.sort_values("clicks_delta", ascending=True).head(1)
+        # 伸びた/落ちた（絶対値ベース）
+        gain = tmp.sort_values("clicks_delta", ascending=False).head(1)
+        loss = tmp.sort_values("clicks_delta", ascending=True).head(1)
 
-        if not top_gain.empty and float(top_gain.iloc[0]["clicks_delta"]) > 0:
-            q = top_gain.iloc[0]["query"]
-            d = int(round(float(top_gain.iloc[0]["clicks_delta"])))
-            lines.append(f'The top growing query was "{q}" (+{d} clicks).')
+        if not gain.empty and float(gain.iloc[0]["clicks_delta"]) > 0:
+            q = gain.iloc[0]["query"]
+            d = int(round(float(gain.iloc[0]["clicks_delta"])))
+            lines.append(f'Top gaining query: "{q}" (+{d} clicks).')
 
-        if not top_loss.empty and float(top_loss.iloc[0]["clicks_delta"]) < 0:
-            q = top_loss.iloc[0]["query"]
-            d = int(round(float(top_loss.iloc[0]["clicks_delta"])))
-            lines.append(f'The largest decline was observed for "{q}" ({d} clicks).')
+        if not loss.empty and float(loss.iloc[0]["clicks_delta"]) < 0:
+            q = loss.iloc[0]["query"]
+            d = int(round(float(loss.iloc[0]["clicks_delta"])))
+            lines.append(f'Top losing query: "{q}" ({d} clicks).')
 
-        # Actions from CTR / position movement (simple heuristics)
-        # If many queries have negative clicks delta -> investigate
-        neg_ratio = (tmp["clicks_delta"] < 0).mean()
-        if neg_ratio >= 0.6:
-            actions.append("Investigate queries with the largest WoW click drops and validate ranking/CTR changes (GSC: Queries + Pages).")
+        # ---- Actions heuristics ----
+        # 1) position悪化がそこそこある
+        if not pd.isna(cur_pos) and not pd.isna(prev_pos) and (cur_pos - prev_pos) > 0.3:
+            actions.append("Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.")
 
-        # If average position got worse noticeably (higher number is worse)
-        if "position" in tmp.columns and "position_prev" in tmp.columns:
-            pos_cur = tmp["position"].replace([np.inf, -np.inf], np.nan).dropna()
-            pos_prev = tmp["position_prev"].replace([np.inf, -np.inf], np.nan).dropna()
-            if len(pos_cur) and len(pos_prev):
-                avg_pos_cur = float(pos_cur.mean())
-                avg_pos_prev = float(pos_prev.mean())
-                if avg_pos_cur - avg_pos_prev > 0.5:
-                    actions.append("Average position worsened WoW—review pages losing rankings and check for intent mismatch or internal linking gaps.")
+        # 2) CTR落ちてる
+        if not pd.isna(cur_ctr) and not pd.isna(prev_ctr) and (cur_ctr - prev_ctr) < -0.005:
+            actions.append("CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.")
 
-    # --- GA4 channel callout ---
+        # 3) 大きく落ちたクエリがある
+        big_drops = tmp[tmp["clicks_delta"] <= -3].head(5)
+        if len(big_drops) > 0:
+            actions.append("Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.")
+
+        # 4) “新規流入クエリ”が増えた（prevがNaN/0でdelta>0）
+        new_winners = tmp[(tmp["clicks_prev"].fillna(0) == 0) & (tmp["clicks"] > 0)].head(5)
+        if len(new_winners) > 0:
+            actions.append("New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.")
+
+    # ---- GA4 channel callout ----
+    cur_sessions = float(ga4_cur["sessions"].sum()) if ga4_cur is not None and not ga4_cur.empty else 0.0
+    prev_sessions = float(ga4_prev["sessions"].sum()) if ga4_prev is not None and not ga4_prev.empty else 0.0
+
+    if prev_sessions > 0:
+        wow_sessions_pct = (cur_sessions - prev_sessions) / prev_sessions
+        lines.append(f"GA4 sessions changed by {wow_sessions_pct*100:.1f}% WoW ({int(cur_sessions):,} vs {int(prev_sessions):,}).")
+    elif cur_sessions > 0:
+        lines.append(f"GA4 sessions for the current period were {int(cur_sessions):,} (no prior-week baseline).")
+
     if ga4_wow is not None and not ga4_wow.empty:
         top_channel = ga4_wow.sort_values("sessions", ascending=False).head(1)
         if not top_channel.empty:
             ch = top_channel.iloc[0]["channel_group"]
-            lines.append(f"{ch} was the strongest traffic channel this week.")
+            lines.append(f"Top traffic channel: {ch}.")
 
-        # Organic Search sessions drop -> action
         org = ga4_wow[ga4_wow["channel_group"] == "Organic Search"].copy()
         if not org.empty and "sessions_prev" in org.columns:
             s = float(org.iloc[0]["sessions"])
@@ -203,11 +289,11 @@ def build_exec_summary(gsc_wow: pd.DataFrame, ga4_wow: pd.DataFrame) -> tuple[st
             if sp > 0:
                 pct = (s - sp) / sp
                 if pct <= -0.10:
-                    actions.append("Organic Search sessions dropped WoW—cross-check GSC clicks/impressions vs GA4 landing pages to identify the root cause.")
+                    actions.append("Organic Search sessions dropped WoW—compare GSC clicks vs GA4 landing pages to locate the main decline pages.")
                 elif pct >= 0.10:
-                    actions.append("Organic Search sessions grew WoW—double down on the top winning pages/queries (update content, strengthen internal links).")
+                    actions.append("Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).")
 
-    # Fallback actions
+    # ---- fallback ----
     if not actions:
         actions = [
             "Review top gaining/declining queries and map them to landing pages for quick wins.",
@@ -245,8 +331,11 @@ def main():
     gsc_wow = add_wow(gsc_df, gsc_prev_df, key="query", metrics=["clicks", "impressions", "ctr", "position"])
     ga4_wow = add_wow(ga4_df, ga4_prev_df, key="channel_group", metrics=["sessions", "total_users"])
 
-    # Executive Summary + Next Actions (English)
-    exec_summary, next_actions = build_exec_summary(gsc_wow, ga4_wow)
+    # Executive Summary + Next Actions
+    exec_summary, next_actions = build_exec_summary(
+        gsc_df, gsc_prev_df, gsc_wow,
+        ga4_df, ga4_prev_df, ga4_wow
+    )
 
     out_dir = "reports/weekly"
     img_dir = f"{out_dir}/images"
@@ -269,6 +358,13 @@ def main():
 
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
+    # tables
+    gsc_cols = ["query", "clicks", "clicks_prev", "clicks_delta", "clicks_pct", "impressions", "ctr", "position"]
+    ga4_cols = ["channel_group", "sessions", "sessions_prev", "sessions_delta", "sessions_pct", "total_users"]
+
+    gsc_view = gsc_wow[gsc_cols] if gsc_wow is not None and not gsc_wow.empty else gsc_wow
+    ga4_view = ga4_wow[ga4_cols] if ga4_wow is not None and not ga4_wow.empty else ga4_wow
+
     md = f"""# Weekly SEO Report
 
 ## Executive Summary
@@ -280,21 +376,10 @@ def main():
 - Generated: {now}
 
 ## Google Search Console – Top Queries (WoW)
-{to_md_table(
-    gsc_wow[
-        ["query", "clicks", "clicks_prev", "clicks_delta", "clicks_pct",
-         "impressions", "position"]
-    ] if gsc_wow is not None and not gsc_wow.empty else gsc_wow,
-    20
-)}
+{to_md_table(gsc_view, 20)}
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
-{to_md_table(
-    ga4_wow[
-        ["channel_group", "sessions", "sessions_prev", "sessions_delta", "sessions_pct"]
-    ] if ga4_wow is not None and not ga4_wow.empty else ga4_wow,
-    20
-)}
+{to_md_table(ga4_view, 20)}
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
