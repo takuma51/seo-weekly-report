@@ -2,23 +2,33 @@ name: weekly-seo-report
 
 on:
   schedule:
-    - cron: "10 21 * * 0" # Sun 21:10 UTC = Mon 06:10 JST
+    # Sun 21:10 UTC = Mon 06:10 JST
+    - cron: "10 21 * * 0"
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: weekly-seo-report
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install deps
         run: |
@@ -43,7 +53,7 @@ jobs:
           today = datetime.now(tz).date()
           this_monday = today - timedelta(days=today.weekday())
 
-          # 今週レポート対象（先週の月〜日）
+          # 対象（先週の月〜日）
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
 
@@ -57,6 +67,7 @@ jobs:
             f.write(f"PREV_START_DATE={prev_start.isoformat()}\n")
             f.write(f"PREV_END_DATE={prev_end.isoformat()}\n")
           PY
+
       - name: Run weekly report
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
@@ -72,6 +83,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add reports/ || true
+
           git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
-          git push
+
+          # まれに競合するので保険（同時実行/直前pushなど）
+          git pull --rebase origin main || true
+          git push origin main
