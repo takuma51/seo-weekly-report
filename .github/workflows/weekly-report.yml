@@ -51,19 +51,19 @@ jobs:
           today = datetime.now(tz).date()
           this_monday = today - timedelta(days=today.weekday())
 
-          # 対象（先週の月〜日）
+          # Target week: last Mon-Sun
           start = this_monday - timedelta(days=7)
           end = this_monday - timedelta(days=1)
 
-          # 前週（さらに1週間前）
+          # Previous week
           prev_start = start - timedelta(days=7)
           prev_end = end - timedelta(days=7)
 
           with open(os.environ["GITHUB_ENV"], "a") as f:
-            f.write(f"START_DATE={start.isoformat()}\n")
-            f.write(f"END_DATE={end.isoformat()}\n")
-            f.write(f"PREV_START_DATE={prev_start.isoformat()}\n")
-            f.write(f"PREV_END_DATE={prev_end.isoformat()}\n")
+              f.write(f"START_DATE={start.isoformat()}\n")
+              f.write(f"END_DATE={end.isoformat()}\n")
+              f.write(f"PREV_START_DATE={prev_start.isoformat()}\n")
+              f.write(f"PREV_END_DATE={prev_end.isoformat()}\n")
           PY
 
       - name: Run weekly report
@@ -77,15 +77,21 @@ jobs:
           PREV_END_DATE: ${{ env.PREV_END_DATE }}
         run: python src/run_weekly.py
 
-      - name: Commit report
+      - name: Commit and push report
+        env:
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add reports/ || true
 
-          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
+          # commitが無いと失敗するので吸収
+          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes to commit"
 
-          # 競合回避（直前pushなど）
+          # 念のため最新を取り込んでからpush
           git pull --rebase origin main || true
           git push origin main
