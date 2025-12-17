@@ -34,8 +34,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip show tabulate || true
-          python -m pip list | grep -i tabulate || true
 
       - name: Install Japanese fonts
         run: |
@@ -79,15 +77,27 @@ jobs:
           PREV_END_DATE: ${{ env.PREV_END_DATE }}
         run: python src/run_weekly.py
 
-      - name: Commit report
+      - name: Commit & push report
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # 先に最新へ（直前に誰かがpushしてても事故りにくい）
+          git pull --rebase origin main
+
           git add reports/ || true
 
-          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})" || echo "No changes"
+          # 変更が無ければ終了
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
 
-          # まれに競合するので保険（同時実行/直前pushなど）
-          git pull --rebase origin main || true
+          git commit -m "Weekly SEO report (${START_DATE} to ${END_DATE})"
+
+          # 念のためもう一回rebase（直前push対策）
+          git pull --rebase origin main
+
           git push origin main
