@@ -6,7 +6,7 @@ Search clicks changed by -19.1% WoW (131 vs 162). Impressions changed by -12.4% 
 
 - Current: **2025-12-08 → 2025-12-14**
 - Previous: **2025-12-01 → 2025-12-07**
-- Generated: 2025-12-17 06:41 UTC
+- Generated: 2025-12-17 06:49 UTC
 
 ## Google Search Console – Top Queries (WoW)
 | query          |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
