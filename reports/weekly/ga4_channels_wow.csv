@@ -1,0 +1,6 @@
+channel_group,sessions,total_users,sessions_prev,total_users_prev,sessions_delta,sessions_pct,total_users_delta,total_users_pct
+Organic Search,382,348,459,417,-77,-0.16775599128540306,-69,-0.16546762589928057
+Direct,79,74,76,66,3,0.039473684210526314,8,0.12121212121212122
+Referral,16,10,13,9,3,0.23076923076923078,1,0.1111111111111111
+Unassigned,10,8,10,10,0,0.0,-2,-0.2
+Organic Social,5,4,16,15,-11,-0.6875,-11,-0.7333333333333333
