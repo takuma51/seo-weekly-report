@@ -131,9 +131,12 @@ def fmt_float(x, digits=2) -> str:
         return "0"
 
 def safe_div(n, d):
-    if d is None or d == 0:
+    try:
+        if d is None or float(d) == 0:
+            return np.nan
+        return float(n) / float(d)
+    except Exception:
         return np.nan
-    return n / d
 
 def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
     if df is None or df.empty:
@@ -155,19 +158,19 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
         if c in int_like:
             view[c] = view[c].apply(fmt_int)
 
-    # 位置は小数が見たい
+    # positionは小数
     for c in ["position", "position_prev", "position_delta"]:
         if c in view.columns:
             view[c] = view[c].apply(lambda v: fmt_float(v, 2))
 
-    # CTRは%で見たい（ctr/ctr_prevは0-1）
+    # ctr/ctr_prevは0-1 -> %
     for c in ["ctr", "ctr_prev"]:
         if c in view.columns:
             view[c] = view[c].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}%")
-    for c in ["ctr_delta"]:
-        if c in view.columns:
-            # 0-1差分を%pt表示
-            view[c] = view[c].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}pt")
+
+    # ctr_deltaは0-1差分 -> pt
+    if "ctr_delta" in view.columns:
+        view["ctr_delta"] = view["ctr_delta"].apply(lambda v: "—" if pd.isna(v) else f"{float(v)*100:.1f}pt")
 
     return view.to_markdown(index=False)
 
@@ -175,8 +178,11 @@ def to_md_table(df: pd.DataFrame, max_rows=20) -> str:
 # =========================
 # Executive summary & actions (rule-based)
 # =========================
-def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: pd.DataFrame,
-                       ga4_cur: pd.DataFrame, ga4_prev: pd.DataFrame, ga4_wow: pd.DataFrame) -> tuple[str, list[str]]:
+def build_exec_summary(
+    gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: pd.DataFrame,
+    ga4_cur: pd.DataFrame, ga4_prev: pd.DataFrame, ga4_wow: pd.DataFrame
+) -> tuple[str, list[str]]:
+
     lines: list[str] = []
     actions: list[str] = []
 
@@ -190,7 +196,7 @@ def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: p
     cur_ctr = safe_div(cur_clicks, cur_impr)
     prev_ctr = safe_div(prev_clicks, prev_impr)
 
-    # positionは「impressions加重平均」に寄せる（より実態に近い）
+    # impression加重 position
     def weighted_pos(df: pd.DataFrame) -> float:
         if df is None or df.empty:
             return np.nan
@@ -214,7 +220,7 @@ def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: p
         lines.append(f"Impressions changed by {wow_impr_pct*100:.1f}% WoW ({int(cur_impr):,} vs {int(prev_impr):,}).")
 
     if not pd.isna(cur_ctr):
-        if not pd.isna(prev_ctr) and prev_ctr > 0:
+        if not pd.isna(prev_ctr):
             ctr_delta_pt = (cur_ctr - prev_ctr) * 100
             lines.append(f"CTR is {cur_ctr*100:.1f}% ({ctr_delta_pt:+.1f}pt WoW).")
         else:
@@ -223,7 +229,6 @@ def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: p
     if not pd.isna(cur_pos):
         if not pd.isna(prev_pos):
             pos_delta = cur_pos - prev_pos
-            # positionは小さいほど良いので、+は悪化
             lines.append(f"Avg position is {cur_pos:.2f} ({pos_delta:+.2f} WoW).")
         else:
             lines.append(f"Avg position is {cur_pos:.2f}.")
@@ -233,7 +238,6 @@ def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: p
         tmp = gsc_wow.copy()
         tmp["clicks_delta"] = tmp["clicks_delta"].fillna(0)
 
-        # 伸びた/落ちた（絶対値ベース）
         gain = tmp.sort_values("clicks_delta", ascending=False).head(1)
         loss = tmp.sort_values("clicks_delta", ascending=True).head(1)
 
@@ -248,25 +252,25 @@ def build_exec_summary(gsc_cur: pd.DataFrame, gsc_prev: pd.DataFrame, gsc_wow: p
             lines.append(f'Top losing query: "{q}" ({d} clicks).')
 
         # ---- Actions heuristics ----
-        # 1) position悪化がそこそこある
-        if not pd.isna(cur_pos) and not pd.isna(prev_pos) and (cur_pos - prev_pos) > 0.3:
+        # Position worse (higher is worse)
+        if not pd.isna(cur_pos) and not pd.isna(prev_pos) and (cur_pos - prev_pos) > 0.30:
             actions.append("Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.")
 
-        # 2) CTR落ちてる
+        # CTR drop: -0.5pt threshold
         if not pd.isna(cur_ctr) and not pd.isna(prev_ctr) and (cur_ctr - prev_ctr) < -0.005:
             actions.append("CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.")
 
-        # 3) 大きく落ちたクエリがある
+        # Big query drops
         big_drops = tmp[tmp["clicks_delta"] <= -3].head(5)
         if len(big_drops) > 0:
             actions.append("Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.")
 
-        # 4) “新規流入クエリ”が増えた（prevがNaN/0でdelta>0）
-        new_winners = tmp[(tmp["clicks_prev"].fillna(0) == 0) & (tmp["clicks"] > 0)].head(5)
+        # New queries
+        new_winners = tmp[(tmp.get("clicks_prev", pd.Series([0]*len(tmp))).fillna(0) == 0) & (tmp["clicks"] > 0)].head(5)
         if len(new_winners) > 0:
             actions.append("New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.")
 
-    # ---- GA4 channel callout ----
+    # ---- GA4 totals ----
     cur_sessions = float(ga4_cur["sessions"].sum()) if ga4_cur is not None and not ga4_cur.empty else 0.0
     prev_sessions = float(ga4_prev["sessions"].sum()) if ga4_prev is not None and not ga4_prev.empty else 0.0
 
@@ -331,7 +335,6 @@ def main():
     gsc_wow = add_wow(gsc_df, gsc_prev_df, key="query", metrics=["clicks", "impressions", "ctr", "position"])
     ga4_wow = add_wow(ga4_df, ga4_prev_df, key="channel_group", metrics=["sessions", "total_users"])
 
-    # Executive Summary + Next Actions
     exec_summary, next_actions = build_exec_summary(
         gsc_df, gsc_prev_df, gsc_wow,
         ga4_df, ga4_prev_df, ga4_wow
@@ -341,7 +344,7 @@ def main():
     img_dir = f"{out_dir}/images"
     os.makedirs(img_dir, exist_ok=True)
 
-    # Save CSVs
+    # Save CSVs (optional raw tables)
     if gsc_df is not None and not gsc_df.empty:
         gsc_df.to_csv(f"{out_dir}/gsc_top_queries.csv", index=False)
     if ga4_df is not None and not ga4_df.empty:
@@ -352,13 +355,12 @@ def main():
     if ga4_wow is not None and not ga4_wow.empty:
         ga4_wow.to_csv(f"{out_dir}/ga4_channels_wow.csv", index=False)
 
-    # Plot (current week top queries)
+    # Plot
     if gsc_df is not None and not gsc_df.empty:
         plot_top_queries(gsc_df, f"{img_dir}/top_queries.png")
 
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
-    # tables
     gsc_cols = ["query", "clicks", "clicks_prev", "clicks_delta", "clicks_pct", "impressions", "ctr", "position"]
     ga4_cols = ["channel_group", "sessions", "sessions_prev", "sessions_delta", "sessions_pct", "total_users"]
 
