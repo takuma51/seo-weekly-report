@@ -1,3 +1,11 @@
+## What this project shows
+
+- Automated weekly SEO reporting (GSC + GA4)
+- Week-over-Week comparison logic
+- Executive Summary auto-generation
+- GitHub Actions for fully automated delivery
+- Public, client-shareable report URL
+
 # Weekly SEO Report
 
 ## Executive Summary
