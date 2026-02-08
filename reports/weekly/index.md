@@ -7,49 +7,49 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -15.2% WoW (78 vs 92). Impressions changed by -20.9% WoW (1,006 vs 1,272). CTR is 7.8% (+0.5pt WoW). Avg position is 19.30 (-0.10 WoW). Top gaining query: "カオサン通り 女 遊び" (+7 clicks). Top losing query: "カオサン通り 夜遊び" (-7 clicks). GA4 sessions changed by 28.9% WoW (499 vs 387). Top traffic channel: Organic Search.
+Search clicks changed by -25.2% WoW (83 vs 111). Impressions changed by -29.3% WoW (904 vs 1,279). CTR is 9.2% (+0.5pt WoW). Avg position is 19.53 (+1.40 WoW). Top gaining query: "カオサン通り ゴーゴーバー" (+3 clicks). Top losing query: "オカダマニラ 遊び方" (-3 clicks). GA4 sessions changed by 8.8% WoW (542 vs 498). Top traffic channel: Organic Search.
 
-- Current: **2026-01-26 → 2026-02-01**
-- Previous: **2026-01-19 → 2026-01-25**
-- Generated: 2026-02-01 21:34 UTC
+- Current: **2026-02-02 → 2026-02-08**
+- Previous: **2026-01-26 → 2026-02-01**
+- Generated: 2026-02-08 21:37 UTC
 
 ## Google Search Console – Top Queries (WoW)
-| query              |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
-|:-------------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
-| カオサン通り 夜遊び         |       11 |            18 |             -7 | -38.9%       |            66 | 16.7%  |       3.17 |
-| カオサン通り 女 遊び        |       11 |             4 |              7 | 175.0%       |            42 | 26.2%  |       3.76 |
-| カオサン通り ゴーゴーバー      |        9 |            12 |             -3 | -25.0%       |            17 | 52.9%  |       1.24 |
-| カオサン通り 風俗          |        7 |             8 |             -1 | -12.5%       |            16 | 43.8%  |       1.06 |
-| 自衛隊から消防士           |        4 |             3 |              1 | 33.3%        |            18 | 22.2%  |       2    |
-| タイ ゴーゴーバー 通り       |        2 |             0 |              2 | —            |            42 | 4.8%   |       4    |
-| 自衛官 退職金計算 シュミレーション |        2 |             0 |              2 | —            |            16 | 12.5%  |       5.88 |
-| ワットポー 時間           |        2 |             0 |              2 | —            |            14 | 14.3%  |       8.14 |
-| オカダマニラ 遊び方         |        2 |             2 |              0 | 0.0%         |             8 | 25.0%  |       2.12 |
-| 自衛隊 早期退職 40代       |        2 |             1 |              1 | 100.0%       |             8 | 25.0%  |       1.62 |
-| 自衛官 転職 40代         |        2 |             0 |              2 | —            |             7 | 28.6%  |       1    |
-| カオサン ゴーゴーバー        |        2 |             5 |             -3 | -60.0%       |             2 | 100.0% |       1    |
-| 自衛隊 定年後 悲惨         |        1 |             0 |              1 | —            |            97 | 1.0%   |      11.46 |
-| 警察官と自衛官 どっち がいい    |        1 |             0 |              1 | —            |            18 | 5.6%   |       6.5  |
-| オカダマニラ カジノ 遊び方     |        1 |             1 |              0 | 0.0%         |            14 | 7.1%   |       6.21 |
-| 自衛隊から警察            |        1 |             0 |              1 | —            |            13 | 7.7%   |       5.38 |
-| ミュンヘン 2月 観光        |        1 |             1 |              0 | 0.0%         |            12 | 8.3%   |       1.25 |
-| マレーシア atm キャッシング   |        1 |             0 |              1 | —            |            10 | 10.0%  |       6.6  |
-| サンシーロ 座席           |        1 |             1 |              0 | 0.0%         |             9 | 11.1%  |       5.78 |
-| 自衛官から刑務官           |        1 |             0 |              1 | —            |             7 | 14.3%  |       4    |
+| query           |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
+|:----------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
+| カオサン通り 夜遊び      |       17 |            17 |              0 | 0.0%         |           112 | 15.2%  |       2.84 |
+| カオサン通り ゴーゴーバー   |       14 |            11 |              3 | 27.3%        |            28 | 50.0%  |       1.14 |
+| カオサン通り 女 遊び     |       12 |            14 |             -2 | -14.3%       |            41 | 29.3%  |       3.59 |
+| カオサン通り 風俗       |       10 |            10 |              0 | 0.0%         |            17 | 58.8%  |       1.06 |
+| オカダマニラ カジノ 遊び方  |        3 |             2 |              1 | 50.0%        |            15 | 20.0%  |       6.53 |
+| カオサン通り 女        |        3 |             2 |              1 | 50.0%        |            13 | 23.1%  |       5.15 |
+| 47 都 道府県 制覇 費用  |        2 |             0 |              2 | —            |             9 | 22.2%  |       3.44 |
+| カオサン 風俗         |        2 |             1 |              1 | 100.0%       |             4 | 50.0%  |       1.5  |
+| バリ島 キャッシング      |        2 |             3 |             -1 | -33.3%       |             2 | 100.0% |       1    |
+| 自衛隊から消防士        |        1 |             4 |             -3 | -75.0%       |            14 | 7.1%   |       1.93 |
+| ワットポー 時間        |        1 |             2 |             -1 | -50.0%       |            13 | 7.7%   |       6.62 |
+| ワットポー 服装        |        1 |             0 |              1 | —            |            13 | 7.7%   |       9.46 |
+| ボンダイビーチ カフェ     |        1 |             0 |              1 | —            |            11 | 9.1%   |       9.27 |
+| サンシーロ 座席        |        1 |             2 |             -1 | -50.0%       |            10 | 10.0%  |       6.9  |
+| 自衛隊から市役所        |        1 |             0 |              1 | —            |             8 | 12.5%  |       6.38 |
+| オカダマニラ 遊び方      |        1 |             4 |             -3 | -75.0%       |             7 | 14.3%  |       3.71 |
+| 自衛隊 から消防士 有利    |        1 |             2 |             -1 | -50.0%       |             5 | 20.0%  |       2    |
+| クアラルンプール キャッシング |        1 |             0 |              1 | —            |             4 | 25.0%  |       4    |
+| カオサン通り エロ       |        1 |             2 |             -1 | -50.0%       |             3 | 33.3%  |       2.67 |
+| ミュンヘン 2月 観光     |        1 |             1 |              0 | 0.0%         |             3 | 33.3%  |       4.33 |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        331 |             270 |               61 | 22.6%          |           293 |
-| Direct          |        136 |              92 |               44 | 47.8%          |           132 |
-| Referral        |         17 |              10 |                7 | 70.0%          |            16 |
-| Organic Social  |         13 |              11 |                2 | 18.2%          |             9 |
-| Unassigned      |          2 |               4 |               -2 | -50.0%         |             2 |
+| Organic Search  |        310 |             330 |              -20 | -6.1%          |           284 |
+| Direct          |        190 |             136 |               54 | 39.7%          |           183 |
+| Organic Social  |         25 |              13 |               12 | 92.3%          |            14 |
+| Referral        |         13 |              17 |               -4 | -23.5%         |            12 |
+| Unassigned      |          4 |               2 |                2 | 100.0%         |             3 |
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
 
 ## Notes / Next Actions
+- Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.
 - Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
-- Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).
