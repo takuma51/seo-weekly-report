@@ -7,49 +7,49 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -39.2% WoW (76 vs 125). Impressions changed by -4.0% WoW (1,354 vs 1,411). CTR is 5.6% (-3.2pt WoW). Avg position is 20.40 (-1.30 WoW). Top gaining query: "バンコク コワーキングスペース" (+2 clicks). Top losing query: "カオサン通り 夜遊び" (-10 clicks). GA4 sessions changed by 1.1% WoW (467 vs 462). Top traffic channel: Organic Search.
+Search clicks changed by 23.9% WoW (145 vs 117). Impressions changed by -13.1% WoW (1,522 vs 1,751). CTR is 9.5% (+2.8pt WoW). Avg position is 15.20 (-3.26 WoW). Top gaining query: "シドニー空港 お土産" (+14 clicks). Top losing query: "カオサン通り 夜遊び" (-6 clicks). GA4 sessions changed by 2.1% WoW (479 vs 469). Top traffic channel: Organic Search.
 
-- Current: **2026-03-02 → 2026-03-08**
-- Previous: **2026-02-23 → 2026-03-01**
-- Generated: 2026-03-08 21:33 UTC
+- Current: **2026-03-09 → 2026-03-15**
+- Previous: **2026-03-02 → 2026-03-08**
+- Generated: 2026-03-15 21:37 UTC
 
 ## Google Search Console – Top Queries (WoW)
-| query             |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr   |   position |
-|:------------------|---------:|--------------:|---------------:|:-------------|--------------:|:------|-----------:|
-| カオサン通り 夜遊び        |       14 |            24 |            -10 | -41.7%       |           140 | 10.0% |       5.11 |
-| カオサン通り ゴーゴーバー     |       10 |            14 |             -4 | -28.6%       |            27 | 37.0% |       1.26 |
-| カオサン通り 女 遊び       |        9 |            18 |             -9 | -50.0%       |            51 | 17.6% |       5.29 |
-| カオサン通り 風俗         |        7 |             8 |             -1 | -12.5%       |            31 | 22.6% |       3.94 |
-| シドニー空港 お土産        |        3 |             7 |             -4 | -57.1%       |            48 | 6.2%  |       6.58 |
-| ブッキングドットコム ひどい    |        2 |             1 |              1 | 100.0%       |           273 | 0.7%  |       8.91 |
-| オカダマニラ カジノ 遊び方    |        2 |             2 |              0 | 0.0%         |            21 | 9.5%  |       4.9  |
-| バンコク コワーキングスペース   |        2 |             0 |              2 | —            |            12 | 16.7% |      11.08 |
-| ミュンヘン 観光          |        1 |             0 |              1 | —            |            45 | 2.2%  |      17.69 |
-| 47都道府県 制覇         |        1 |             1 |              0 | 0.0%         |            30 | 3.3%  |       9.9  |
-| ブッキングドットコム        |        1 |             0 |              1 | —            |            21 | 4.8%  |      16.48 |
-| 47 都 道府県 制覇 費用    |        1 |             1 |              0 | 0.0%         |            18 | 5.6%  |       3.5  |
-| バンコク ゴーゴーバー 通り    |        1 |             0 |              1 | —            |            17 | 5.9%  |      11.24 |
-| 自衛隊から警察           |        1 |             1 |              0 | 0.0%         |            12 | 8.3%  |       9.92 |
-| シドニー空港 ターミナル1 お土産 |        1 |             0 |              1 | —            |            10 | 10.0% |       8.3  |
-| 自衛隊から消防士          |        1 |             4 |             -3 | -75.0%       |             9 | 11.1% |       2.11 |
-| シドニー 空港 お土産       |        1 |             0 |              1 | —            |             8 | 12.5% |       6.75 |
-| カオサンロード 夜         |        1 |             0 |              1 | —            |             7 | 14.3% |      10.14 |
-| オカダマニラ 服装         |        1 |             0 |              1 | —            |             6 | 16.7% |       9.17 |
-| カオサン 風俗           |        1 |             4 |             -3 | -75.0%       |             6 | 16.7% |       3.5  |
+| query          |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
+|:---------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
+| カオサン通り 夜遊び     |       24 |            30 |             -6 | -20.0%       |           140 | 17.1%  |       3.98 |
+| カオサン通り ゴーゴーバー  |       19 |            14 |              5 | 35.7%        |            39 | 48.7%  |       1.13 |
+| シドニー空港 お土産     |       17 |             3 |             14 | 466.7%       |            94 | 18.1%  |       6.57 |
+| カオサン通り 女 遊び    |       15 |            13 |              2 | 15.4%        |            44 | 34.1%  |       3.18 |
+| カオサン通り 風俗      |       13 |            10 |              3 | 30.0%        |            30 | 43.3%  |       1.4  |
+| カオサン ゴーゴーバー    |        6 |             1 |              5 | 500.0%       |            10 | 60.0%  |       1.1  |
+| オカダマニラ カジノ 遊び方 |        4 |             2 |              2 | 100.0%       |            12 | 33.3%  |       4.42 |
+| オカダマニラ 遊び方     |        4 |             1 |              3 | 300.0%       |             8 | 50.0%  |       5.25 |
+| ブッキングドットコム ひどい |        3 |             4 |             -1 | -25.0%       |           251 | 1.2%   |       9.11 |
+| 自衛隊から消防士       |        3 |             1 |              2 | 200.0%       |            14 | 21.4%  |       3.07 |
+| カオサン 風俗        |        3 |             1 |              2 | 200.0%       |            13 | 23.1%  |       2.38 |
+| シドニー国際空港 お土産   |        2 |             0 |              2 | —            |            13 | 15.4%  |       7.85 |
+| シドニー 空港 お土産    |        2 |             1 |              1 | 100.0%       |            12 | 16.7%  |       6.67 |
+| カオサン通り エロ      |        2 |             1 |              1 | 100.0%       |            11 | 18.2%  |       2.45 |
+| 自衛官から消防士       |        2 |             1 |              1 | 100.0%       |             3 | 66.7%  |       5    |
+| バリ島 atm        |        2 |             1 |              1 | 100.0%       |             2 | 100.0% |       1    |
+| ブッキングドットコム     |        1 |             1 |              0 | 0.0%         |            33 | 3.0%   |      12.18 |
+| 47都道府県 制覇      |        1 |             1 |              0 | 0.0%         |            28 | 3.6%   |       7.14 |
+| バンコク ゴーゴーバー 通り |        1 |             1 |              0 | 0.0%         |            24 | 4.2%   |       4.58 |
+| 47 都 道府県 制覇 費用 |        1 |             1 |              0 | 0.0%         |            10 | 10.0%  |       2.8  |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        327 |             311 |               16 | 5.1%           |           296 |
-| Direct          |        117 |              82 |               35 | 42.7%          |           111 |
-| Referral        |         13 |              31 |              -18 | -58.1%         |            12 |
-| Unassigned      |          6 |               3 |                3 | 100.0%         |             6 |
-| Organic Social  |          4 |              35 |              -31 | -88.6%         |             4 |
+| Organic Search  |        381 |             329 |               52 | 15.8%          |           349 |
+| Direct          |         42 |             117 |              -75 | -64.1%         |            42 |
+| Organic Social  |         24 |               4 |               20 | 500.0%         |            22 |
+| Referral        |         21 |              13 |                8 | 61.5%          |            16 |
+| Unassigned      |         11 |               6 |                5 | 83.3%          |            11 |
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
 
 ## Notes / Next Actions
-- CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.
 - Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
+- Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).
