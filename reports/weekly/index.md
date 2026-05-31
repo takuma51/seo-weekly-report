@@ -7,47 +7,48 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -5.5% WoW (69 vs 73). Impressions changed by -2.8% WoW (1,474 vs 1,516). CTR is 4.7% (-0.1pt WoW). Avg position is 14.06 (-5.31 WoW). Top gaining query: "カオサン通り 夜遊び" (+4 clicks). Top losing query: "自衛隊 定年後 悲惨" (-3 clicks). GA4 sessions changed by -7.3% WoW (391 vs 422). Top traffic channel: Organic Search.
+Search clicks changed by -34.9% WoW (69 vs 106). Impressions changed by -30.5% WoW (1,106 vs 1,592). CTR is 6.2% (-0.4pt WoW). Avg position is 21.19 (+6.23 WoW). Top gaining query: "ブッキング・ドットコム" (+2 clicks). Top losing query: "カオサン通り 風俗" (-5 clicks). GA4 sessions changed by 4.1% WoW (407 vs 391). Top traffic channel: Organic Search.
 
-- Current: **2026-05-18 → 2026-05-24**
-- Previous: **2026-05-11 → 2026-05-17**
-- Generated: 2026-05-24 22:05 UTC
+- Current: **2026-05-25 → 2026-05-31**
+- Previous: **2026-05-18 → 2026-05-24**
+- Generated: 2026-05-31 22:10 UTC
 
 ## Google Search Console – Top Queries (WoW)
 | query                |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
 |:---------------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
-| カオサン通り 夜遊び           |       11 |             7 |              4 | 57.1%        |            43 | 25.6%  |       3.35 |
-| カオサン通り 女 遊び          |        6 |             6 |              0 | 0.0%         |            24 | 25.0%  |       2.29 |
-| シドニー空港 お土産           |        4 |             4 |              0 | 0.0%         |            24 | 16.7%  |       6.21 |
-| 47 都 道府県 制覇 費用       |        3 |             2 |              1 | 50.0%        |            14 | 21.4%  |       2.79 |
-| カオサン通り ゴーゴーバー        |        3 |             2 |              1 | 50.0%        |             9 | 33.3%  |       1.56 |
-| カオサン通り 風俗            |        3 |             2 |              1 | 50.0%        |             5 | 60.0%  |       1    |
-| 自衛隊 定年後 悲惨           |        2 |             5 |             -3 | -60.0%       |           194 | 1.0%   |       6.68 |
-| ワットポー 入場料            |        2 |             0 |              2 | —            |            63 | 3.2%   |       6.87 |
-| 自衛隊 給料 安すぎ           |        2 |             0 |              2 | —            |            36 | 5.6%   |       6.03 |
-| オペラハウス プロジェクションマッピング |        2 |             2 |              0 | 0.0%         |             9 | 22.2%  |       4.33 |
-| シドニー お土産屋さん          |        2 |             0 |              2 | —            |             4 | 50.0%  |       9.75 |
-| ウブド モデルコース           |        2 |             0 |              2 | —            |             2 | 100.0% |       5.5  |
-| カオサン 風俗              |        2 |             0 |              2 | —            |             2 | 100.0% |       1.5  |
-| 自衛隊 退職金計算シミュレーション    |        1 |             1 |              0 | 0.0%         |            66 | 1.5%   |       6.26 |
-| バンコク ゴーゴーバー 通り       |        1 |             2 |             -1 | -50.0%       |            34 | 2.9%   |       6.06 |
-| ウブド観光モデルコース          |        1 |             2 |             -1 | -50.0%       |            32 | 3.1%   |       7.91 |
-| 自衛隊から消防士             |        1 |             4 |             -3 | -75.0%       |            23 | 4.3%   |       1.74 |
-| 自衛隊 うつ病 休職 給料        |        1 |             0 |              1 | —            |            12 | 8.3%   |       9.5  |
-| 自衛官から警察官             |        1 |             0 |              1 | —            |             9 | 11.1%  |       6.56 |
-| 台湾 淡水 グルメ            |        1 |             0 |              1 | —            |             6 | 16.7%  |       7.5  |
+| カオサン通り 夜遊び           |        9 |            12 |             -3 | -25.0%       |            37 | 24.3%  |       3.43 |
+| カオサン通り 女 遊び          |        6 |            10 |             -4 | -40.0%       |            24 | 25.0%  |       2.08 |
+| カオサン通り ゴーゴーバー        |        4 |             4 |              0 | 0.0%         |             6 | 66.7%  |       1.33 |
+| 自衛隊から消防士             |        3 |             2 |              1 | 50.0%        |             9 | 33.3%  |       1.78 |
+| カオサン 風俗              |        3 |             3 |              0 | 0.0%         |             4 | 75.0%  |       2    |
+| ブッキングドットコム ひどい       |        2 |             0 |              2 | —            |           144 | 1.4%   |       9.98 |
+| バンコク ゴーゴーバー 通り       |        2 |             3 |             -1 | -33.3%       |            36 | 5.6%   |       5.72 |
+| ウブド観光モデルコース          |        2 |             1 |              1 | 100.0%       |            18 | 11.1%  |       8.67 |
+| ブッキング・ドットコム          |        2 |             0 |              2 | —            |            12 | 16.7%  |       2.83 |
+| オカダマニラ カジノ 遊び方       |        2 |             2 |              0 | 0.0%         |             7 | 28.6%  |       2.14 |
+| シドニー国際空港 お土産         |        2 |             0 |              2 | —            |             6 | 33.3%  |       4.67 |
+| 自衛隊 早期退職 40代         |        2 |             2 |              0 | 0.0%         |             5 | 40.0%  |       2    |
+| 自衛官から消防士             |        2 |             2 |              0 | 0.0%         |             4 | 50.0%  |       1.75 |
+| オカダマニラ 遊び方           |        2 |             2 |              0 | 0.0%         |             2 | 100.0% |       2    |
+| ワットポー 入場料            |        1 |             2 |             -1 | -50.0%       |            55 | 1.8%   |       7.58 |
+| 自衛官 若年給付金計算          |        1 |             1 |              0 | 0.0%         |            33 | 3.0%   |       8.18 |
+| 47都道府県 制覇            |        1 |             0 |              1 | —            |            27 | 3.7%   |       7.41 |
+| ブッキングドットコムトラブル       |        1 |             0 |              1 | —            |            19 | 5.3%   |       3    |
+| オペラハウス プロジェクションマッピング |        1 |             2 |             -1 | -50.0%       |            15 | 6.7%   |       2.73 |
+| srsltid              |        1 |             0 |              1 | —            |            10 | 10.0%  |       9    |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        337 |             334 |                3 | 0.9%           |           296 |
-| Direct          |         37 |              43 |               -6 | -14.0%         |            36 |
-| Referral        |         11 |              23 |              -12 | -52.2%         |            11 |
-| Organic Social  |          6 |              21 |              -15 | -71.4%         |             6 |
+| Organic Search  |        319 |             337 |              -18 | -5.3%          |           287 |
+| Direct          |         75 |              37 |               38 | 102.7%         |            70 |
+| Referral        |         12 |              11 |                1 | 9.1%           |            11 |
+| Unassigned      |          1 |               0 |                1 | —              |             1 |
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
 
 ## Notes / Next Actions
+- Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.
 - Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
