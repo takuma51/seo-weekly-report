@@ -7,51 +7,48 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -56.7% WoW (42 vs 97). Impressions changed by -44.3% WoW (917 vs 1,647). CTR is 4.6% (-1.3pt WoW). Avg position is 23.34 (+4.09 WoW). Top gaining query: "自衛隊から警察" (+2 clicks). Top losing query: "カオサン通り 夜遊び" (-8 clicks). GA4 sessions changed by -13.3% WoW (353 vs 407). Top traffic channel: Organic Search.
+Search clicks changed by -40.0% WoW (48 vs 80). Impressions changed by -40.1% WoW (851 vs 1,420). CTR is 5.6% (+0.0pt WoW). Avg position is 24.40 (+4.24 WoW). Top gaining query: "オカダマニラ カジノ 遊び方" (+2 clicks). Top losing query: "カオサン通り 女 遊び" (-7 clicks). GA4 sessions changed by -5.1% WoW (335 vs 353). Top traffic channel: Organic Search.
 
-- Current: **2026-06-01 → 2026-06-07**
-- Previous: **2026-05-25 → 2026-05-31**
-- Generated: 2026-06-07 22:14 UTC
+- Current: **2026-06-08 → 2026-06-14**
+- Previous: **2026-06-01 → 2026-06-07**
+- Generated: 2026-06-14 22:19 UTC
 
 ## Google Search Console – Top Queries (WoW)
-| query                |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr   |   position |
-|:---------------------|---------:|--------------:|---------------:|:-------------|--------------:|:------|-----------:|
-| カオサン通り 女 遊び          |        5 |             6 |             -1 | -16.7%       |            20 | 25.0% |       2.25 |
-| カオサン通り 夜遊び           |        4 |            12 |             -8 | -66.7%       |            24 | 16.7% |       3.54 |
-| カオサン通り ゴーゴーバー        |        3 |            10 |             -7 | -70.0%       |             7 | 42.9% |       1.43 |
-| バリ島 キャッシング           |        3 |             2 |              1 | 50.0%        |             4 | 75.0% |       1    |
-| バンコク ゴーゴーバー 通り       |        2 |             3 |             -1 | -33.3%       |            38 | 5.3%  |       6.92 |
-| 自衛隊から警察              |        2 |             0 |              2 | —            |             8 | 25.0% |       5.38 |
-| オペラハウス プロジェクションマッピング |        2 |             1 |              1 | 100.0%       |             6 | 33.3% |       3.17 |
-| ブッキングドットコム           |        1 |             0 |              1 | —            |            50 | 2.0%  |       5.14 |
-| 自衛隊 定年後 悲惨           |        1 |             2 |             -1 | -50.0%       |            49 | 2.0%  |       8    |
-| 自衛官 英語               |        1 |             0 |              1 | —            |            32 | 3.1%  |       9.84 |
-| ブッキングドットコムトラブル       |        1 |             1 |              0 | 0.0%         |            11 | 9.1%  |       2.73 |
-| 自衛隊から消防士             |        1 |             3 |             -2 | -66.7%       |             9 | 11.1% |       3.33 |
-| 47都道府県制覇             |        1 |             1 |              0 | 0.0%         |             8 | 12.5% |       8    |
-| 自衛官から警察官             |        1 |             0 |              1 | —            |             7 | 14.3% |       5    |
-| ワットポー 時間             |        1 |             1 |              0 | 0.0%         |             6 | 16.7% |       5.5  |
-| 警察と自衛隊どっちがいい         |        1 |             0 |              1 | —            |             6 | 16.7% |       6.5  |
-| 47都道府県 旅行            |        1 |             0 |              1 | —            |             5 | 20.0% |       8    |
-| ゴーゴーバー おすすめ          |        1 |             1 |              0 | 0.0%         |             5 | 20.0% |       6.2  |
-| 自衛官 うつ病 分限免職         |        1 |             0 |              1 | —            |             5 | 20.0% |       1.4  |
-| 自衛隊 警察官 なるなら         |        1 |             0 |              1 | —            |             5 | 20.0% |       5.6  |
+| query              |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr   |   position |
+|:-------------------|---------:|--------------:|---------------:|:-------------|--------------:|:------|-----------:|
+| カオサン通り 夜遊び         |        8 |             8 |              0 | 0.0%         |            41 | 19.5% |       3.73 |
+| カオサン通り 女 遊び        |        4 |            11 |             -7 | -63.6%       |            27 | 14.8% |       2.81 |
+| オカダマニラ カジノ 遊び方     |        4 |             2 |              2 | 100.0%       |             7 | 57.1% |       3    |
+| シドニー空港 お土産         |        2 |             1 |              1 | 100.0%       |            12 | 16.7% |       6.92 |
+| 自衛隊 退職金計算 シュミレーション |        1 |             0 |              1 | —            |            37 | 2.7%  |       8.08 |
+| ブッキングドットコム ひどい     |        1 |             0 |              1 | —            |            36 | 2.8%  |      10.36 |
+| 自衛隊 定年後 悲惨         |        1 |             1 |              0 | 0.0%         |            35 | 2.9%  |       8.63 |
+| 47都道府県 制覇          |        1 |             0 |              1 | —            |            24 | 4.2%  |       9.62 |
+| ウブド観光モデルコース        |        1 |             2 |             -1 | -50.0%       |            18 | 5.6%  |       9.11 |
+| 自衛隊から警察            |        1 |             2 |             -1 | -50.0%       |            14 | 7.1%  |       4.79 |
+| 自衛隊から市役所 転職        |        1 |             1 |              0 | 0.0%         |            12 | 8.3%  |       6.75 |
+| オカダマニラ ktv         |        1 |             0 |              1 | —            |             8 | 12.5% |       8.75 |
+| ワットポー 時間           |        1 |             1 |              0 | 0.0%         |             8 | 12.5% |       6.38 |
+| 自衛隊 早期退職 40代       |        1 |             1 |              0 | 0.0%         |             8 | 12.5% |       3.12 |
+| カオサン通り 風俗          |        1 |             4 |             -3 | -75.0%       |             7 | 14.3% |       2    |
+| 自衛隊 から消防士 有利       |        1 |             0 |              1 | —            |             5 | 20.0% |       3    |
+| オカダマニラ コンビニ        |        1 |             0 |              1 | —            |             4 | 25.0% |       7.5  |
+| シドニー国際空港 お土産       |        1 |             1 |              0 | 0.0%         |             4 | 25.0% |       8    |
+| supabase 脆弱性       |        1 |             1 |              0 | 0.0%         |             3 | 33.3% |       9.67 |
+| デンパサール空港 atm       |        1 |             1 |              0 | 0.0%         |             3 | 33.3% |       6    |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        287 |             319 |              -32 | -10.0%         |           265 |
-| Direct          |         46 |              75 |              -29 | -38.7%         |            45 |
-| Referral        |         16 |              12 |                4 | 33.3%          |            15 |
-| Unassigned      |          3 |               1 |                2 | 200.0%         |             3 |
-| Organic Social  |          1 |               0 |                1 | —              |             1 |
+| Organic Search  |        266 |             287 |              -21 | -7.3%          |           236 |
+| Direct          |         53 |              46 |                7 | 15.2%          |            48 |
+| Referral        |         11 |              16 |               -5 | -31.2%         |             8 |
+| AI Assistant    |          5 |               0 |                5 | —              |             4 |
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
 
 ## Notes / Next Actions
 - Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.
-- CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.
 - Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
-- Organic Search sessions dropped WoW—compare GSC clicks vs GA4 landing pages to locate the main decline pages.
