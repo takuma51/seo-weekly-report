@@ -7,50 +7,48 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -30.4% WoW (55 vs 79). Impressions changed by -33.1% WoW (785 vs 1,173). CTR is 7.0% (+0.3pt WoW). Avg position is 33.64 (+7.54 WoW). Top gaining query: "シドニー お土産 ばらまき" (+2 clicks). Top losing query: "カオサン通り 女 遊び" (-7 clicks). GA4 sessions changed by -10.0% WoW (389 vs 432). Top traffic channel: Organic Search.
+Search clicks changed by 2.5% WoW (81 vs 79). Impressions changed by 0.8% WoW (1,060 vs 1,052). CTR is 7.6% (+0.1pt WoW). Avg position is 24.37 (-8.73 WoW). Top gaining query: "カオサン通り ゴーゴーバー" (+5 clicks). Top losing query: "オカダマニラ 遊び方" (-2 clicks). GA4 sessions changed by 113.3% WoW (832 vs 390). Top traffic channel: Direct.
 
-- Current: **2026-08-24 → 2026-08-30**
-- Previous: **2026-08-17 → 2026-08-23**
-- Generated: 2026-08-30 23:25 UTC
+- Current: **2026-08-31 → 2026-09-06**
+- Previous: **2026-08-24 → 2026-08-30**
+- Generated: 2026-09-06 22:51 UTC
 
 ## Google Search Console – Top Queries (WoW)
-| query                |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr   |   position |
-|:---------------------|---------:|--------------:|---------------:|:-------------|--------------:|:------|-----------:|
-| カオサン通り 女 遊び          |       20 |            27 |             -7 | -25.9%       |            75 | 26.7% |       3.17 |
-| カオサン通り 夜遊び           |        4 |             4 |              0 | 0.0%         |            24 | 16.7% |       4.33 |
-| オカダマニラ 遊び方           |        3 |             2 |              1 | 50.0%        |            11 | 27.3% |       2.55 |
-| カオサン通り 風俗            |        2 |             3 |             -1 | -33.3%       |            15 | 13.3% |       2.33 |
-| 自衛隊から消防士             |        2 |             3 |             -1 | -33.3%       |            15 | 13.3% |       4.47 |
-| 自衛隊から警察              |        2 |             0 |              2 | —            |            15 | 13.3% |       4.33 |
-| カオサン通り ゴーゴーバー        |        2 |             4 |             -2 | -50.0%       |            11 | 18.2% |       1.09 |
-| カオサン 風俗              |        2 |             3 |             -1 | -33.3%       |             5 | 40.0% |       1.6  |
-| シドニー お土産 ばらまき        |        2 |             0 |              2 | —            |             3 | 66.7% |      27.33 |
-| オペラハウス プロジェクションマッピング |        1 |             2 |             -1 | -50.0%       |             7 | 14.3% |       2.57 |
-| タイ エロ通り              |        1 |             0 |              1 | —            |             7 | 14.3% |       7.86 |
-| 自衛隊から警察官             |        1 |             0 |              1 | —            |             7 | 14.3% |       5    |
-| シドニー国際空港 お土産         |        1 |             0 |              1 | —            |             6 | 16.7% |       6.5  |
-| オカダマニラ ktv           |        1 |             0 |              1 | —            |             5 | 20.0% |      10.6  |
-| マレーシア キャッシング         |        1 |             1 |              0 | 0.0%         |             5 | 20.0% |       8.2  |
-| カオサン通り エロ            |        1 |             2 |             -1 | -50.0%       |             3 | 33.3% |       3    |
-| デンパサール空港 atm         |        1 |             2 |             -1 | -50.0%       |             2 | 50.0% |       2.5  |
-| バリ キャッシング            |        1 |             0 |              1 | —            |             2 | 50.0% |       2    |
-| バリ島 クレジットカード キャッシング  |        1 |             0 |              1 | —            |             2 | 50.0% |       2    |
-| ワットポー 営業 時間          |        1 |             0 |              1 | —            |             2 | 50.0% |       4.5  |
+| query             |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr   |   position |
+|:------------------|---------:|--------------:|---------------:|:-------------|--------------:|:------|-----------:|
+| カオサン通り 女 遊び       |       30 |            30 |              0 | 0.0%         |            85 | 35.3% |       2.52 |
+| カオサン通り ゴーゴーバー     |        9 |             4 |              5 | 125.0%       |            14 | 64.3% |       1.14 |
+| カオサン通り 風俗         |        8 |             4 |              4 | 100.0%       |            18 | 44.4% |       1.83 |
+| カオサン通り 夜遊び        |        5 |             5 |              0 | 0.0%         |            32 | 15.6% |       3.81 |
+| デンパサール空港 atm      |        3 |             1 |              2 | 200.0%       |             5 | 60.0% |       2.6  |
+| 自衛隊 退職金計算シミュレーション |        1 |             0 |              1 | —            |            92 | 1.1%  |       6.79 |
+| ゴーゴーバー            |        1 |             0 |              1 | —            |            88 | 1.1%  |       8.55 |
+| 自衛隊 給料 安 すぎ       |        1 |             1 |              0 | 0.0%         |            38 | 2.6%  |       5.97 |
+| 自衛官から警察官          |        1 |             0 |              1 | —            |            24 | 4.2%  |       4.96 |
+| 自衛隊から消防士          |        1 |             2 |             -1 | -50.0%       |            19 | 5.3%  |       4.63 |
+| ワットポー 所要時間        |        1 |             0 |              1 | —            |            16 | 6.2%  |       5.94 |
+| 自衛隊 入隊 40歳        |        1 |             0 |              1 | —            |            15 | 6.7%  |       9.13 |
+| ペラサイト             |        1 |             0 |              1 | —            |            14 | 7.1%  |       8.07 |
+| シドニー国際空港 お土産      |        1 |             1 |              0 | 0.0%         |            12 | 8.3%  |       7.83 |
+| ボンダイビーチ カフェ       |        1 |             0 |              1 | —            |             9 | 11.1% |      11.56 |
+| 自衛官から消防士          |        1 |             0 |              1 | —            |             9 | 11.1% |       4.44 |
+| 自衛隊から警察官          |        1 |             1 |              0 | 0.0%         |             8 | 12.5% |       5    |
+| バリ島 atm           |        1 |             0 |              1 | —            |             7 | 14.3% |       5.71 |
+| インドネシア atm キャッシング |        1 |             0 |              1 | —            |             6 | 16.7% |       7.83 |
+| マレーシア キャッシング      |        1 |             1 |              0 | 0.0%         |             6 | 16.7% |       9.83 |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        248 |             276 |              -28 | -10.1%         |           213 |
-| Direct          |        128 |             146 |              -18 | -12.3%         |           122 |
-| Organic Social  |          5 |               4 |                1 | 25.0%          |             3 |
-| Referral        |          5 |               5 |                0 | 0.0%           |             4 |
-| AI Assistant    |          3 |               0 |                3 | —              |             2 |
+| Direct          |        509 |             128 |              381 | 297.7%         |           506 |
+| Organic Search  |        317 |             249 |               68 | 27.3%          |           278 |
+| Referral        |          4 |               5 |               -1 | -20.0%         |             2 |
+| AI Assistant    |          1 |               3 |               -2 | -66.7%         |             1 |
+| Organic Social  |          1 |               5 |               -4 | -80.0%         |             1 |
 
 ## Visuals
 ![Top Queries](images/top_queries.png)
 
 ## Notes / Next Actions
-- Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.
-- Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
-- Organic Search sessions dropped WoW—compare GSC clicks vs GA4 landing pages to locate the main decline pages.
+- Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).
