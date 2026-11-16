@@ -7,43 +7,44 @@ title: Weekly SEO Report
 
 ## Executive Summary
 
-Search clicks changed by -18.0% WoW (41 vs 50). Impressions changed by -12.9% WoW (753 vs 865). CTR is 5.4% (-0.3pt WoW). Avg position is 32.58 (+2.02 WoW). Top gaining query: "カオサン通り 風俗" (+4 clicks). Top losing query: "カオサン通り 夜遊び" (-3 clicks). GA4 sessions changed by 33.3% WoW (376 vs 282). Top traffic channel: Organic Search.
+Search clicks changed by -56.6% WoW (23 vs 53). Impressions changed by -32.6% WoW (627 vs 930). CTR is 3.7% (-2.0pt WoW). Avg position is 33.24 (+1.28 WoW). Top gaining query: "警察官と自衛官 どっち がいい" (+2 clicks). Top losing query: "カオサン通り 風俗" (-4 clicks). GA4 sessions changed by 1.1% WoW (380 vs 376). Top traffic channel: Direct.
 
-- Current: **2026-11-02 → 2026-11-08**
-- Previous: **2026-10-26 → 2026-11-01**
-- Generated: 2026-11-09 00:45 UTC
+- Current: **2026-11-09 → 2026-11-15**
+- Previous: **2026-11-02 → 2026-11-08**
+- Generated: 2026-11-16 00:55 UTC
 
 ## Google Search Console – Top Queries (WoW)
-| query                          |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
-|:-------------------------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
-| カオサン通り ゴーゴーバー                  |        8 |             9 |             -1 | -11.1%       |            13 | 61.5%  |       1.08 |
-| カオサン通り 夜遊び                     |        4 |             7 |             -3 | -42.9%       |            30 | 13.3%  |       4.03 |
-| カオサン通り 風俗                      |        4 |             0 |              4 | —            |             9 | 44.4%  |       1.67 |
-| 自衛隊 給料 高 すぎる                   |        3 |             1 |              2 | 200.0%       |             4 | 75.0%  |      11.25 |
-| 自衛隊から警察                        |        2 |             2 |              0 | 0.0%         |            33 | 6.1%   |       4.15 |
-| オカダマニラ カジノ 遊び方                 |        2 |             1 |              1 | 100.0%       |             3 | 66.7%  |      14.33 |
-| 自衛官から警察官                       |        1 |             0 |              1 | —            |             9 | 11.1%  |       4.33 |
-| オンライン英会話 美人                    |        1 |             0 |              1 | —            |             7 | 14.3%  |       9.29 |
-| ボンダイビーチ カフェ                    |        1 |             0 |              1 | —            |             7 | 14.3%  |       6.57 |
-| 自衛官から刑務官                       |        1 |             0 |              1 | —            |             5 | 20.0%  |       8.4  |
-| 自衛隊から警察官                       |        1 |             2 |             -1 | -50.0%       |             5 | 20.0%  |       4.4  |
-| オカダマニラ ktv                     |        1 |             0 |              1 | —            |             4 | 25.0%  |       9.5  |
-| カオサン 風俗                        |        1 |             1 |              0 | 0.0%         |             4 | 25.0%  |       3    |
-| シドニー空港 お土産 売り場                 |        1 |             0 |              1 | —            |             3 | 33.3%  |      11.67 |
-| レアル・マドリード チケット                 |        1 |             0 |              1 | —            |             3 | 33.3%  |      18    |
-| 自衛官 転職                         |        1 |             1 |              0 | 0.0%         |             3 | 33.3%  |      28.33 |
-| サイト構造 最適化                      |        1 |             0 |              1 | —            |             2 | 50.0%  |      11    |
-| 30 day visa extension thailand |        1 |             0 |              1 | —            |             1 | 100.0% |      70    |
-| seo program                    |        1 |             0 |              1 | —            |             1 | 100.0% |       5    |
-| お願いします                         |        1 |             0 |              1 | —            |             1 | 100.0% |       8    |
+| query             |   clicks |   clicks_prev |   clicks_delta | clicks_pct   |   impressions | ctr    |   position |
+|:------------------|---------:|--------------:|---------------:|:-------------|--------------:|:-------|-----------:|
+| カオサン通り ゴーゴーバー     |        6 |             9 |             -3 | -33.3%       |             9 | 66.7%  |       1    |
+| カオサン通り 夜遊び        |        5 |             6 |             -1 | -16.7%       |            36 | 13.9%  |       3.08 |
+| 警察官と自衛官 どっち がいい   |        2 |             0 |              2 | —            |            16 | 12.5%  |       5.81 |
+| 自衛隊から消防士          |        1 |             0 |              1 | —            |            14 | 7.1%   |       4.57 |
+| ワットポー 時間          |        1 |             0 |              1 | —            |            12 | 8.3%   |       5.42 |
+| 自衛官から消防士          |        1 |             1 |              0 | 0.0%         |             5 | 20.0%  |       5.8  |
+| 自衛隊と警察 給料         |        1 |             0 |              1 | —            |             5 | 20.0%  |       4.2  |
+| カオサン通り 風俗         |        1 |             5 |             -4 | -80.0%       |             3 | 33.3%  |       2    |
+| カオサン通り エロ         |        1 |             0 |              1 | —            |             2 | 50.0%  |       2    |
+| バンコク 風俗 おすすめ      |        1 |             0 |              1 | —            |             2 | 50.0%  |      10    |
+| ウブド 観光 モデルコース     |        1 |             0 |              1 | —            |             1 | 100.0% |      13    |
+| オカダマニラカジノ         |        1 |             0 |              1 | —            |             1 | 100.0% |      22    |
+| バリ島 キャッシング        |        1 |             0 |              1 | —            |             1 | 100.0% |       3    |
+| booking           |        0 |             0 |              0 | —            |            13 | 0.0%   |      15    |
+| khao san road     |        0 |             0 |              0 | —            |            11 | 0.0%   |      35.36 |
+| カオサン通り            |        0 |             0 |              0 | —            |            11 | 0.0%   |      14.64 |
+| ネイティブキャンプ 評判      |        0 |             0 |              0 | —            |            11 | 0.0%   |      59.73 |
+| google 検索順位 おかしい  |        0 |             0 |              0 | —            |            10 | 0.0%   |      44.7  |
+| best cafes canggu |        0 |             0 |              0 | —            |             9 | 0.0%   |      63.56 |
+| canggu cafes      |        0 |             0 |              0 | —            |             9 | 0.0%   |      72.89 |
 
 ## Google Analytics (GA4) – Sessions by Channel (WoW)
 | channel_group   |   sessions |   sessions_prev |   sessions_delta | sessions_pct   |   total_users |
 |:----------------|-----------:|----------------:|-----------------:|:---------------|--------------:|
-| Organic Search  |        186 |             155 |               31 | 20.0%          |           172 |
-| Direct          |        130 |              97 |               33 | 34.0%          |           130 |
-| Referral        |         54 |              27 |               27 | 100.0%         |            54 |
-| AI Assistant    |          5 |               2 |                3 | 150.0%         |             3 |
+| Direct          |        219 |             130 |               89 | 68.5%          |           217 |
+| Organic Search  |        148 |             186 |              -38 | -20.4%         |           136 |
+| Referral        |          6 |              54 |              -48 | -88.9%         |             6 |
+| AI Assistant    |          4 |               5 |               -1 | -20.0%         |             2 |
+| Organic Social  |          2 |               0 |                2 | —              |             2 |
 | Unassigned      |          1 |               1 |                0 | 0.0%           |             1 |
 
 ## Visuals
@@ -51,6 +52,7 @@ Search clicks changed by -18.0% WoW (41 vs 50). Impressions changed by -12.9% Wo
 
 ## Notes / Next Actions
 - Rankings slightly weakened WoW—review pages losing positions and strengthen internal links around those topics.
+- CTR decreased WoW—test title/meta updates for high-impression queries and validate SERP intent alignment.
 - Investigate the largest click drops (Queries → Pages) and check indexability/canonical/internal-link changes.
 - New queries appeared WoW—map them to landing pages and expand content clusters to capture more long-tail demand.
-- Organic Search sessions grew WoW—double down on winning pages (refresh content + add internal links).
+- Organic Search sessions dropped WoW—compare GSC clicks vs GA4 landing pages to locate the main decline pages.
